@@ -18,11 +18,14 @@ import {
   ChevronDown,
   UserPlus,
   Check,
-  Clock,
   ArrowLeft,
   RefreshCw,
+  BotOff,
+  Bot,
+  Clock,
 } from "lucide-react";
 import { format, isToday, isYesterday, differenceInHours } from "date-fns";
+import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -146,6 +149,12 @@ export function MessageThread({
 }: MessageThreadProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [isAIPaused, setIsAIPaused] = useState(conversation?.ai_paused || false);
+
+  useEffect(() => {
+    setIsAIPaused(conversation?.ai_paused || false);
+  }, [conversation?.ai_paused]);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -690,6 +699,23 @@ export function MessageThread({
     [conversation, onAssignChange],
   );
 
+  const handleAIToggle = useCallback(async (paused: boolean) => {
+    if (!conversation) return;
+    setIsAIPaused(paused);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("conversations")
+      .update({ ai_paused: paused })
+      .eq("id", conversation.id);
+      
+    if (error) {
+      toast.error("Failed to toggle AI state");
+      setIsAIPaused(!paused);
+    } else {
+      toast.success(paused ? "AI paused for this chat" : "AI resumed for this chat");
+    }
+  }, [conversation]);
+
   // Empty state — same WhatsApp-style doodle background as the active
   // thread below, so swapping between empty/selected doesn't change the
   // pattern under the user's eye.
@@ -781,6 +807,21 @@ export function MessageThread({
               />
             </button>
           )}
+
+          {/* AI Toggle */}
+          <div className="hidden sm:flex items-center gap-1.5 px-2 h-7 rounded-md bg-slate-800/50 border border-slate-800">
+            {isAIPaused ? (
+              <BotOff className="h-3.5 w-3.5 text-amber-500" />
+            ) : (
+              <Bot className="h-3.5 w-3.5 text-green-500" />
+            )}
+            <Switch
+              checked={!isAIPaused}
+              onCheckedChange={(checked) => handleAIToggle(!checked)}
+              className="scale-75 data-[state=checked]:bg-green-500"
+              title={isAIPaused ? "AI is paused. Click to resume." : "AI is active. Click to pause."}
+            />
+          </div>
 
           {/* Status dropdown */}
           <DropdownMenu>

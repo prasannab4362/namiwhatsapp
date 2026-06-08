@@ -274,7 +274,8 @@ async function processWebhook(body: { entry?: WhatsAppWebhookEntry[] }) {
           // inserts that need it for NOT NULL FK compliance. Always
           // the admin who saved the WhatsApp config.
           config.user_id,
-          decryptedAccessToken
+          decryptedAccessToken,
+          config.phone_number_id
         )
       }
     }
@@ -508,7 +509,8 @@ async function processMessage(
   // (contacts, conversations). Always the admin who saved the
   // WhatsApp config; the choice is arbitrary post-017 but stable.
   configOwnerUserId: string,
-  accessToken: string
+  accessToken: string,
+  phoneNumberId: string
 ) {
   const senderPhone = normalizePhone(message.from)
   const contactName = contact.profile.name
@@ -711,6 +713,24 @@ async function processMessage(
         conversation_id: conversation.id,
       },
     }).catch((err) => console.error('[automations] dispatch failed:', err))
+  }
+
+  // ============================================================
+  // AI Bot Dispatch
+  // ============================================================
+  if (!flowConsumed) {
+    import('@/lib/ai/bot').then(({ handleAIBotReply }) => {
+      handleAIBotReply({
+        accountId,
+        userId: configOwnerUserId,
+        contactId: contactRecord.id,
+        conversationId: conversation.id,
+        message,
+        phoneNumberId,
+        accessToken,
+        recipientPhone: senderPhone,
+      }).catch(err => console.error('[AI] Bot dispatch failed:', err))
+    })
   }
 }
 

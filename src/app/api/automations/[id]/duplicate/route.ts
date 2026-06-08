@@ -13,6 +13,9 @@ export async function POST(
   } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const { data: profile } = await supabase.from('profiles').select('account_id').eq('user_id', user.id).single()
+  if (!profile?.account_id) return NextResponse.json({ error: 'No account found' }, { status: 400 })
+
   const admin = supabaseAdmin()
   const { data: original, error: origErr } = await admin
     .from('automations')
@@ -26,6 +29,7 @@ export async function POST(
   const { data: copy, error: copyErr } = await admin
     .from('automations')
     .insert({
+      account_id: profile.account_id,
       user_id: user.id,
       name: `${original.name} (Copy)`,
       description: original.description,

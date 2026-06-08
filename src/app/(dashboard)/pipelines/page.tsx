@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { GitBranch, Plus, ChevronDown, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useCan } from "@/hooks/use-can";
+import { useAuth } from "@/hooks/use-auth";
 import { GatedButton } from "@/components/ui/gated-button";
 
 // Pipeline creation is admin-class (settings-tier write under
@@ -47,6 +48,7 @@ export default function PipelinesPage() {
   const supabase = createClient();
   const canEditSettings = useCan("edit-settings");
   const canCreateDeals = useCan("send-messages");
+  const { accountId } = useAuth();
 
   const [pipelines, setPipelines] = useState<Pipeline[]>([]);
   const [selectedPipelineId, setSelectedPipelineId] = useState<string>("");
@@ -110,11 +112,11 @@ export default function PipelinesPage() {
       data: { session },
     } = await supabase.auth.getSession();
     const user = session?.user;
-    if (!user) return null;
+    if (!user || !accountId) return null;
 
     const { data: pipeline, error } = await supabase
       .from("pipelines")
-      .insert({ user_id: user.id, name: "Sales Pipeline" })
+      .insert({ user_id: user.id, account_id: accountId, name: "Sales Pipeline" })
       .select()
       .single();
 
@@ -250,14 +252,14 @@ export default function PipelinesPage() {
       data: { session },
     } = await supabase.auth.getSession();
     const user = session?.user;
-    if (!user) {
+    if (!user || !accountId) {
       setCreating(false);
       return;
     }
 
     const { data: pipeline, error } = await supabase
       .from("pipelines")
-      .insert({ user_id: user.id, name })
+      .insert({ user_id: user.id, account_id: accountId, name })
       .select()
       .single();
 

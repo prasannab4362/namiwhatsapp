@@ -259,7 +259,7 @@ export async function sendTextMessage(
   return { messageId: data.messages[0].id }
 }
 
-export type MediaKind = 'image' | 'video' | 'document'
+export type MediaKind = 'image' | 'video' | 'document' | 'audio'
 
 export interface SendMediaMessageArgs {
   phoneNumberId: string

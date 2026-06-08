@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Contact, MessageTemplate } from '@/types';
+import { useAuth } from '@/hooks/use-auth';
 
 export type CustomFieldOperator = 'is' | 'is_not' | 'contains';
 
@@ -140,6 +141,7 @@ async function fetchCustomValueIndex(
 }
 
 export function useBroadcastSending(): UseBroadcastSendingReturn {
+  const { user, accountId } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -319,12 +321,8 @@ export function useBroadcastSending(): UseBroadcastSendingReturn {
       // (auth.uid() = user_id). Without this, the INSERT below was
       // silently failing with 23502 / 42501 — the wizard would
       // no-op with no feedback.
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const user = session?.user;
-      if (!user) {
-        throw new Error('You are not signed in.');
+      if (!user || !accountId) {
+        throw new Error('Not signed in.');
       }
 
       // ── Step 1: Resolve audience contacts ─────────────────────────
@@ -340,6 +338,7 @@ export function useBroadcastSending(): UseBroadcastSendingReturn {
       const { data: broadcast, error: broadcastError } = await supabase
         .from('broadcasts')
         .insert({
+          account_id: accountId,
           user_id: user.id,
           name: payload.name,
           template_name: payload.template.name,

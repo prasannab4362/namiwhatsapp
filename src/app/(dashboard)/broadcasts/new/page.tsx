@@ -10,6 +10,7 @@ import { Step2SelectAudience } from '@/components/broadcasts/step2-select-audien
 import { Step3Personalize } from '@/components/broadcasts/step3-personalize';
 import { Step4ScheduleSend } from '@/components/broadcasts/step4-schedule-send';
 import { useBroadcastSending } from '@/hooks/use-broadcast-sending';
+import { useAuth } from '@/hooks/use-auth';
 import { Check } from 'lucide-react';
 
 const steps = [
@@ -21,6 +22,7 @@ const steps = [
 
 export default function NewBroadcastPage() {
   const router = useRouter();
+  const { accountId, user } = useAuth();
   const { createAndSendBroadcast, isProcessing, progress } = useBroadcastSending();
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -82,16 +84,13 @@ export default function NewBroadcastPage() {
       return;
     }
     const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
+    if (!user || !accountId) {
       toast.error('Not signed in.');
       return;
     }
 
     const { error } = await supabase.from('broadcasts').insert({
+      account_id: accountId,
       user_id: user.id,
       name: name.trim(),
       template_name: template.name,

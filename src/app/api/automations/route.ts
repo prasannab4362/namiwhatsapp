@@ -30,6 +30,16 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('account_id')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!profile?.account_id) {
+    return NextResponse.json({ error: 'No account found' }, { status: 400 })
+  }
+
   const body = await request.json().catch(() => null)
   if (!body) return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
 
@@ -82,6 +92,7 @@ export async function POST(request: Request) {
   const { data: automation, error: insertErr } = await admin
     .from('automations')
     .insert({
+      account_id: profile.account_id,
       user_id: user.id,
       name: effectiveName,
       description: effectiveDescription ?? null,
