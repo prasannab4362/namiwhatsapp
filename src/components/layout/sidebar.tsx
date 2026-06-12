@@ -52,14 +52,14 @@ const ROLE_CHIP: Record<
     label: "Agent",
     // Neutral slate: the operational default.
     className:
-      "border-slate-700 bg-slate-800 text-slate-300",
+      "border-slate-300 bg-slate-100 text-slate-700",
   },
   viewer: {
     icon: User,
     label: "Viewer",
     // Muted slate: read-only role; visually quieter than agent.
     className:
-      "border-slate-800 bg-slate-900 text-slate-500",
+      "border-slate-200 bg-white text-slate-500",
   },
 };
 import {
@@ -157,7 +157,7 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
         aria-label="Close menu"
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-30 bg-slate-950/70 backdrop-blur-sm transition-opacity lg:hidden",
+          "fixed inset-0 z-30 bg-slate-50/70 backdrop-blur-sm transition-opacity lg:hidden",
           open
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",

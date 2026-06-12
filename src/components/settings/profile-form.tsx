@@ -210,10 +210,10 @@ export function ProfileForm() {
     : '—';
 
   return (
-    <Card className="bg-slate-900/40 border-slate-800">
+    <Card className="bg-slate-900/40 border-slate-200">
       <CardHeader>
-        <CardTitle className="text-white">Profile</CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardTitle className="text-slate-900">Profile</CardTitle>
+        <CardDescription className="text-slate-600">
           How you show up across the app. Your avatar and name appear in the
           header, sidebar, and anywhere your teammates see you.
         </CardDescription>
@@ -255,7 +255,7 @@ export function ProfileForm() {
                   variant="ghost"
                   onClick={onRemoveAvatar}
                   disabled={saving}
-                  className="text-slate-400 hover:text-white"
+                  className="text-slate-600 hover:text-slate-900"
                 >
                   <Trash2 className="size-4" />
                   Remove
@@ -269,7 +269,7 @@ export function ProfileForm() {
 
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="profile-full-name" className="text-slate-200">
+            <Label htmlFor="profile-full-name" className="text-slate-800">
               Display name
             </Label>
             <Input
@@ -285,7 +285,7 @@ export function ProfileForm() {
 
           {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="profile-email" className="text-slate-200">
+            <Label htmlFor="profile-email" className="text-slate-800">
               Email
             </Label>
             <Input
@@ -309,24 +309,24 @@ export function ProfileForm() {
           </div>
 
           {/* Read-only block */}
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-4">
+          <div className="rounded-lg border border-slate-200 bg-slate-900/60 p-4">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Account details
             </p>
             <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
               <div>
                 <dt className="text-slate-500">Role</dt>
-                <dd className="mt-0.5 font-mono text-slate-200">
+                <dd className="mt-0.5 font-mono text-slate-800">
                   {profile?.role ?? 'user'}
                 </dd>
               </div>
               <div>
                 <dt className="text-slate-500">Joined</dt>
-                <dd className="mt-0.5 text-slate-200">{joined}</dd>
+                <dd className="mt-0.5 text-slate-800">{joined}</dd>
               </div>
               <div className="sm:col-span-2">
                 <dt className="text-slate-500">User ID</dt>
-                <dd className="mt-0.5 break-all font-mono text-xs text-slate-400">
+                <dd className="mt-0.5 break-all font-mono text-xs text-slate-600">
                   {user?.id ?? '—'}
                 </dd>
               </div>
@@ -334,7 +334,7 @@ export function ProfileForm() {
           </div>
 
           {!profile && (
-            <p className="flex items-center gap-2 text-sm text-slate-400">
+            <p className="flex items-center gap-2 text-sm text-slate-600">
               <CircleAlert className="size-4" />
               Loading your profile…
             </p>

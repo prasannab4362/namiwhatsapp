@@ -87,21 +87,21 @@ export default function AutomationLogsPage({
         <button
           type="button"
           onClick={() => router.push("/automations")}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-white">{automation.name}</h1>
-          <p className="mt-0.5 text-sm text-slate-400">Execution logs</p>
+          <h1 className="text-2xl font-bold text-slate-900">{automation.name}</h1>
+          <p className="mt-0.5 text-sm text-slate-600">Execution logs</p>
         </div>
       </div>
 
       {logs.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center rounded-xl border border-dashed border-slate-800 bg-slate-900/40">
-          <p className="text-sm text-white">No executions yet</p>
-          <p className="mt-1 text-xs text-slate-400">
+        <div className="flex h-48 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-900/40">
+          <p className="text-sm text-slate-900">No executions yet</p>
+          <p className="mt-1 text-xs text-slate-600">
             Trigger this automation to see runs here.
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function AutomationLogsPage({
             return (
               <li
                 key={log.id}
-                className="rounded-xl border border-slate-800 bg-slate-900"
+                className="rounded-xl border border-slate-200 bg-white"
               >
                 <button
                   type="button"
@@ -126,7 +126,7 @@ export default function AutomationLogsPage({
                   )}
                   <StatusBadge status={log.status} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-white">
+                    <div className="truncate text-sm font-medium text-slate-900">
                       {log.contact?.name ?? log.contact?.phone ?? "Unknown contact"}
                     </div>
                     <div className="truncate text-xs text-slate-500">
@@ -139,7 +139,7 @@ export default function AutomationLogsPage({
                   </div>
                 </button>
                 {isOpen && (
-                  <div className="border-t border-slate-800 px-4 py-3">
+                  <div className="border-t border-slate-200 px-4 py-3">
                     {log.error_message && (
                       <p className="mb-3 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
                         {log.error_message}
@@ -196,7 +196,7 @@ function StepRow({ result }: { result: AutomationLogStepResult }) {
       >
         {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
       </span>
-      <span className="text-slate-300">{result.step_type}</span>
+      <span className="text-slate-700">{result.step_type}</span>
       {result.detail && (
         <span className="truncate text-slate-500">— {result.detail}</span>
       )}

@@ -20,7 +20,7 @@ export const templateStatusConfig: Record<
 > = {
   DRAFT: {
     label: 'Draft',
-    classes: 'bg-slate-600/20 text-slate-400 border-slate-600/30',
+    classes: 'bg-slate-600/20 text-slate-600 border-slate-600/30',
   },
   PENDING: {
     label: 'Pending',

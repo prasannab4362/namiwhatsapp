@@ -54,9 +54,9 @@ export function ActivityFeed({ items, loading }: ActivityFeedProps) {
     i === 0 || totalLoaded > PAGE_SIZES[i - 1]
 
   return (
-    <section className="rounded-xl border border-slate-800 bg-slate-900">
-      <header className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-        <h2 className="text-sm font-semibold text-white">Recent Activity</h2>
+    <section className="rounded-xl border border-slate-200 bg-white">
+      <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+        <h2 className="text-sm font-semibold text-slate-900">Recent Activity</h2>
         <Link
           href="/inbox"
           className="text-xs font-medium text-primary hover:text-primary/80"
@@ -98,7 +98,7 @@ export function ActivityFeed({ items, loading }: ActivityFeedProps) {
                   >
                     <Icon className="h-3.5 w-3.5" />
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm text-slate-200">
+                  <span className="min-w-0 flex-1 truncate text-sm text-slate-800">
                     {it.text}
                   </span>
                   <span className="flex-shrink-0 text-xs text-slate-500 tabular-nums">
@@ -119,7 +119,7 @@ export function ActivityFeed({ items, loading }: ActivityFeedProps) {
               )
             })}
           </ul>
-          <footer className="flex items-center justify-between border-t border-slate-800 px-5 py-3 text-xs">
+          <footer className="flex items-center justify-between border-t border-slate-200 px-5 py-3 text-xs">
             <span className="text-slate-500 tabular-nums">
               Showing {visible.length} of {totalLoaded}
               {totalLoaded === 50 ? '+' : ''}
@@ -137,9 +137,9 @@ export function ActivityFeed({ items, loading }: ActivityFeedProps) {
                     className={cn(
                       'rounded-md px-2 py-1 font-medium tabular-nums transition-colors',
                       pageSize === size
-                        ? 'bg-slate-700 text-white'
-                        : 'text-slate-400 hover:bg-slate-800 hover:text-white',
-                      disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-slate-400',
+                        ? 'bg-slate-700 text-slate-900'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                      disabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-slate-600',
                     )}
                   >
                     {size}

@@ -217,8 +217,8 @@ export default function ContactsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Contacts</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900">Contacts</h1>
+          <p className="text-sm text-slate-600 mt-1">
             Manage your contact list. {totalCount > 0 && `${totalCount} total contacts.`}
           </p>
         </div>
@@ -227,7 +227,7 @@ export default function ContactsPage() {
             <Button
               variant="outline"
               onClick={() => setCustomFieldsOpen(true)}
-              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
             >
               <SlidersHorizontal className="size-4" />
               Custom fields
@@ -238,7 +238,7 @@ export default function ContactsPage() {
             canAct={canEdit}
             gateReason="add or import contacts"
             onClick={() => setImportOpen(true)}
-            className="border-slate-700 text-slate-300 hover:bg-slate-800"
+            className="border-slate-300 text-slate-700 hover:bg-slate-100"
           >
             <Upload className="size-4" />
             Import
@@ -267,27 +267,27 @@ export default function ContactsPage() {
             setPage(0);
           }}
           placeholder="Search by name, phone, or email..."
-          className="pl-8 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500"
+          className="pl-8 bg-white border-slate-300 text-slate-900 placeholder:text-slate-500"
         />
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-slate-800 overflow-hidden">
+      <div className="rounded-lg border border-slate-200 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="border-slate-800 hover:bg-transparent">
-              <TableHead className="text-slate-400">Name</TableHead>
-              <TableHead className="text-slate-400">Phone</TableHead>
-              <TableHead className="text-slate-400 hidden md:table-cell">Email</TableHead>
-              <TableHead className="text-slate-400 hidden lg:table-cell">Company</TableHead>
-              <TableHead className="text-slate-400 hidden md:table-cell">Tags</TableHead>
-              <TableHead className="text-slate-400 hidden lg:table-cell">Created</TableHead>
-              <TableHead className="text-slate-400 w-12" />
+            <TableRow className="border-slate-200 hover:bg-transparent">
+              <TableHead className="text-slate-600">Name</TableHead>
+              <TableHead className="text-slate-600">Phone</TableHead>
+              <TableHead className="text-slate-600 hidden md:table-cell">Email</TableHead>
+              <TableHead className="text-slate-600 hidden lg:table-cell">Company</TableHead>
+              <TableHead className="text-slate-600 hidden md:table-cell">Tags</TableHead>
+              <TableHead className="text-slate-600 hidden lg:table-cell">Created</TableHead>
+              <TableHead className="text-slate-600 w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow className="border-slate-800">
+              <TableRow className="border-slate-200">
                 <TableCell colSpan={7} className="text-center py-12">
                   <div className="flex flex-col items-center gap-2">
                     <Loader2 className="size-6 animate-spin text-primary" />
@@ -296,7 +296,7 @@ export default function ContactsPage() {
                 </TableCell>
               </TableRow>
             ) : contacts.length === 0 ? (
-              <TableRow className="border-slate-800">
+              <TableRow className="border-slate-200">
                 <TableCell colSpan={7} className="text-center py-12">
                   <div className="flex flex-col items-center gap-2">
                     <Users className="size-8 text-slate-600" />
@@ -308,7 +308,7 @@ export default function ContactsPage() {
                         variant="outline"
                         size="sm"
                         onClick={openAddForm}
-                        className="mt-2 border-slate-700 text-slate-300 hover:bg-slate-800"
+                        className="mt-2 border-slate-300 text-slate-700 hover:bg-slate-100"
                       >
                         <Plus className="size-3.5" />
                         Add your first contact
@@ -321,19 +321,19 @@ export default function ContactsPage() {
               contacts.map((contact) => (
                 <TableRow
                   key={contact.id}
-                  className="border-slate-800 hover:bg-slate-900/50 cursor-pointer"
+                  className="border-slate-200 hover:bg-slate-900/50 cursor-pointer"
                   onClick={() => openDetail(contact.id)}
                 >
-                  <TableCell className="text-white font-medium">
+                  <TableCell className="text-slate-900 font-medium">
                     {contact.name || <span className="text-slate-500 italic">Unnamed</span>}
                   </TableCell>
-                  <TableCell className="text-slate-300 font-mono text-xs">
+                  <TableCell className="text-slate-700 font-mono text-xs">
                     {contact.phone}
                   </TableCell>
-                  <TableCell className="text-slate-400 hidden md:table-cell text-sm">
+                  <TableCell className="text-slate-600 hidden md:table-cell text-sm">
                     {contact.email || <span className="text-slate-600">-</span>}
                   </TableCell>
-                  <TableCell className="text-slate-400 hidden lg:table-cell text-sm">
+                  <TableCell className="text-slate-600 hidden lg:table-cell text-sm">
                     {contact.company || <span className="text-slate-600">-</span>}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
@@ -375,7 +375,7 @@ export default function ContactsPage() {
                           <Button
                             variant="ghost"
                             size="icon-sm"
-                            className="text-slate-400 hover:text-white"
+                            className="text-slate-600 hover:text-slate-900"
                             onClick={(e) => e.stopPropagation()}
                           />
                         }
@@ -384,14 +384,14 @@ export default function ContactsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="bg-slate-900 border-slate-700"
+                        className="bg-white border-slate-300"
                       >
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
                             openEditForm(contact);
                           }}
-                          className="text-slate-300 focus:bg-slate-800 focus:text-white"
+                          className="text-slate-700 focus:bg-slate-100 focus:text-slate-900"
                         >
                           <Pencil className="size-4" />
                           Edit
@@ -430,11 +430,11 @@ export default function ContactsPage() {
               size="icon-sm"
               disabled={!hasPrev}
               onClick={() => setPage((p) => p - 1)}
-              className="border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30"
+              className="border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
             >
               <ChevronLeft className="size-4" />
             </Button>
-            <span className="text-xs text-slate-400 px-2">
+            <span className="text-xs text-slate-600 px-2">
               Page {page + 1} of {totalPages}
             </span>
             <Button
@@ -442,7 +442,7 @@ export default function ContactsPage() {
               size="icon-sm"
               disabled={!hasNext}
               onClick={() => setPage((p) => p + 1)}
-              className="border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30"
+              className="border-slate-300 text-slate-600 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
             >
               <ChevronRight className="size-4" />
             </Button>
@@ -491,22 +491,22 @@ export default function ContactsPage() {
 
       {/* Delete Confirmation */}
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="bg-slate-900 border-slate-700 text-slate-200 sm:max-w-sm">
+        <DialogContent className="bg-white border-slate-300 text-slate-800 sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-white">Delete Contact</DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogTitle className="text-slate-900">Delete Contact</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Are you sure you want to delete{' '}
-              <span className="text-slate-200 font-medium">
+              <span className="text-slate-800 font-medium">
                 {deleteTarget?.name || deleteTarget?.phone}
               </span>
               ? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="bg-slate-900 border-slate-700">
+          <DialogFooter className="bg-white border-slate-300">
             <Button
               variant="outline"
               onClick={() => setDeleteConfirmOpen(false)}
-              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
             >
               Cancel
             </Button>

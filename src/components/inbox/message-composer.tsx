@@ -84,7 +84,7 @@ export function MessageComposer({
   );
 
   return (
-    <div className="border-t border-slate-800 bg-slate-900 p-3">
+    <div className="border-t border-slate-200 bg-white p-3">
       {replyTo && (
         <div className="mb-2">
           <ReplyQuote
@@ -118,7 +118,7 @@ export function MessageComposer({
           canAct={!readOnly}
           gateReason="send messages"
           title={readOnly ? undefined : "Send template"}
-          className="h-9 w-9 shrink-0 p-0 text-slate-400 hover:text-white"
+          className="h-9 w-9 shrink-0 p-0 text-slate-600 hover:text-slate-900"
           onClick={onOpenTemplates}
         >
           <LayoutTemplate className="h-4 w-4" />
@@ -143,7 +143,7 @@ export function MessageComposer({
           // The placeholder text also surfaces the read-only state.
           title={readOnly ? "Read-only — your role can't send messages" : undefined}
           className={cn(
-            "flex-1 resize-none rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-primary/50",
+            "flex-1 resize-none rounded-xl border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-500 outline-none transition-colors focus:border-primary/50",
             (sessionExpired || readOnly) && "cursor-not-allowed opacity-50"
           )}
         />

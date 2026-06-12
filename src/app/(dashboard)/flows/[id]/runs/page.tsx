@@ -68,7 +68,7 @@ const STATUS_META: Record<
   },
   completed: {
     label: "Completed",
-    classes: "border-slate-700 bg-slate-800 text-slate-300",
+    classes: "border-slate-300 bg-slate-100 text-slate-700",
     icon: CircleCheck,
   },
   handed_off: {
@@ -78,12 +78,12 @@ const STATUS_META: Record<
   },
   timed_out: {
     label: "Timed out",
-    classes: "border-slate-700 bg-slate-800/60 text-slate-400",
+    classes: "border-slate-300 bg-slate-800/60 text-slate-600",
     icon: Clock,
   },
   paused_by_agent: {
     label: "Paused by agent",
-    classes: "border-slate-700 bg-slate-800 text-slate-300",
+    classes: "border-slate-300 bg-slate-100 text-slate-700",
     icon: PauseCircle,
   },
   failed: {
@@ -158,7 +158,7 @@ export default function FlowRunsPage() {
   if (notFound || !flow) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3">
-        <p className="text-sm text-slate-400">Flow not found.</p>
+        <p className="text-sm text-slate-600">Flow not found.</p>
         <button
           type="button"
           onClick={() => router.push("/flows")}
@@ -175,19 +175,19 @@ export default function FlowRunsPage() {
       <button
         type="button"
         onClick={() => router.push(`/flows/${flow.id}`)}
-        className="mb-2 inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300"
+        className="mb-2 inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700"
       >
         <ArrowLeft className="h-3 w-3" />
         {flow.name}
       </button>
-      <h1 className="text-xl font-semibold text-white">Runs</h1>
-      <p className="mt-1 text-sm text-slate-400">
+      <h1 className="text-xl font-semibold text-slate-900">Runs</h1>
+      <p className="mt-1 text-sm text-slate-600">
         The 50 most recent times this flow ran. Expand a row to see the engine&apos;s
         per-step log.
       </p>
 
       {runs.length === 0 ? (
-        <div className="mt-6 rounded-lg border border-dashed border-slate-700 bg-slate-900/50 px-6 py-12 text-center text-sm text-slate-400">
+        <div className="mt-6 rounded-lg border border-dashed border-slate-300 bg-slate-900/50 px-6 py-12 text-center text-sm text-slate-600">
           No runs yet. Trigger the flow from a personal WhatsApp number to see
           it appear here.
         </div>
@@ -229,7 +229,7 @@ function RunCard({
       })
     : null;
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900">
+    <div className="rounded-lg border border-slate-200 bg-white">
       <button
         type="button"
         onClick={onToggle}
@@ -242,7 +242,7 @@ function RunCard({
         )}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="truncate text-sm font-medium text-white">
+            <span className="truncate text-sm font-medium text-slate-900">
               {contactLabel}
             </span>
             <Badge variant="outline" className={cn("gap-1", meta.classes)}>
@@ -250,7 +250,7 @@ function RunCard({
               {meta.label}
             </Badge>
             {run.status === "active" && run.current_node_key && (
-              <code className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+              <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">
                 at {run.current_node_key}
               </code>
             )}
@@ -265,13 +265,13 @@ function RunCard({
         </div>
       </button>
       {expanded && (
-        <div className="border-t border-slate-800 px-4 py-3">
+        <div className="border-t border-slate-200 px-4 py-3">
           {Object.keys(run.vars).length > 0 && (
             <details className="mb-3">
-              <summary className="cursor-pointer text-xs text-slate-400">
+              <summary className="cursor-pointer text-xs text-slate-600">
                 Captured vars ({Object.keys(run.vars).length})
               </summary>
-              <pre className="mt-2 overflow-x-auto rounded-md bg-slate-950 p-2 text-[11px] text-slate-300">
+              <pre className="mt-2 overflow-x-auto rounded-md bg-slate-50 p-2 text-[11px] text-slate-700">
                 {JSON.stringify(run.vars, null, 2)}
               </pre>
             </details>
@@ -293,7 +293,7 @@ function RunCard({
 
 const EVENT_COLOR: Record<string, string> = {
   started: "text-emerald-300",
-  node_entered: "text-slate-300",
+  node_entered: "text-slate-700",
   message_sent: "text-sky-300",
   reply_received: "text-primary",
   fallback_fired: "text-amber-300",
@@ -304,7 +304,7 @@ const EVENT_COLOR: Record<string, string> = {
 };
 
 function EventLine({ ev }: { ev: EventRow }) {
-  const cls = EVENT_COLOR[ev.event_type] ?? "text-slate-400";
+  const cls = EVENT_COLOR[ev.event_type] ?? "text-slate-600";
   return (
     <div className="flex items-start gap-2 rounded-md px-2 py-1 text-xs">
       <span className="w-32 shrink-0 text-[10px] text-slate-500">
@@ -314,7 +314,7 @@ function EventLine({ ev }: { ev: EventRow }) {
         {ev.event_type}
       </span>
       {ev.node_key && (
-        <code className="shrink-0 rounded bg-slate-800 px-1 py-0.5 text-[10px] text-slate-400">
+        <code className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[10px] text-slate-600">
           {ev.node_key}
         </code>
       )}

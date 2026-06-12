@@ -51,7 +51,7 @@ export function ReplyQuote({
           type="button"
           onClick={onDismiss}
           aria-label="Cancel reply"
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-slate-400 hover:bg-slate-700 hover:text-white"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-slate-600 hover:bg-slate-700 hover:text-slate-900"
         >
           <X className="h-3.5 w-3.5" />
         </button>

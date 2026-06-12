@@ -33,10 +33,10 @@ export function CustomFieldsManager({
 }: CustomFieldsManagerProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-slate-700 bg-slate-900 text-slate-200 sm:max-w-md">
+      <DialogContent className="border-slate-300 bg-white text-slate-800 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">Custom fields</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogTitle className="text-slate-900">Custom fields</DialogTitle>
+          <DialogDescription className="text-slate-600">
             Define extra contact fields (e.g. ZIP code, lead source). They
             appear on every contact and in the “Update Contact Field” automation
             action.
@@ -185,7 +185,7 @@ export function CustomFieldsPanel() {
             }
           }}
           placeholder="New field name…"
-          className="bg-slate-800 text-white"
+          className="bg-slate-100 text-slate-900"
         />
         <Button
           onClick={handleCreate}
@@ -202,7 +202,7 @@ export function CustomFieldsPanel() {
       </div>
 
       {/* List */}
-      <div className="max-h-72 overflow-y-auto rounded-md border border-slate-800">
+      <div className="max-h-72 overflow-y-auto rounded-md border border-slate-200">
         {loading ? (
           <div className="flex items-center justify-center gap-2 py-8 text-sm text-slate-500">
             <Loader2 className="size-4 animate-spin" />
@@ -265,7 +265,7 @@ function FieldRow({
           if (e.key === 'Enter') e.currentTarget.blur();
         }}
         aria-label={`Rename ${field.field_name}`}
-        className="focus:border-primary h-8 border-transparent bg-transparent text-white hover:border-slate-700"
+        className="focus:border-primary h-8 border-transparent bg-transparent text-slate-900 hover:border-slate-300"
       />
       <Button
         variant="ghost"
@@ -273,7 +273,7 @@ function FieldRow({
         disabled={busy}
         onClick={() => onDelete(field)}
         title="Delete field"
-        className="shrink-0 text-slate-400 hover:text-red-400"
+        className="shrink-0 text-slate-600 hover:text-red-400"
       >
         {busy ? (
           <Loader2 className="size-4 animate-spin" />

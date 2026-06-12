@@ -223,12 +223,12 @@ export function ContactForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-slate-900 border-slate-700 text-slate-200 sm:max-w-md">
+      <DialogContent className="bg-white border-slate-300 text-slate-800 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">
+          <DialogTitle className="text-slate-900">
             {isEdit ? 'Edit Contact' : 'Add Contact'}
           </DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-slate-600">
             {isEdit
               ? 'Update the contact details below.'
               : 'Fill in the details to create a new contact.'}
@@ -237,7 +237,7 @@ export function ContactForm({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="cf-name" className="text-slate-300">
+            <Label htmlFor="cf-name" className="text-slate-700">
               Name
             </Label>
             <Input
@@ -245,12 +245,12 @@ export function ContactForm({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-slate-100 border-slate-300 text-slate-900 placeholder:text-slate-500"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cf-phone" className="text-slate-300">
+            <Label htmlFor="cf-phone" className="text-slate-700">
               Phone <span className="text-red-400">*</span>
             </Label>
             <Input
@@ -262,7 +262,7 @@ export function ContactForm({
               }}
               onBlur={checkDuplicate}
               placeholder="+1 234 567 8900"
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-slate-100 border-slate-300 text-slate-900 placeholder:text-slate-500"
             />
             {dupMatch ? (
               <div
@@ -298,7 +298,7 @@ export function ContactForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cf-email" className="text-slate-300">
+            <Label htmlFor="cf-email" className="text-slate-700">
               Email
             </Label>
             <Input
@@ -307,12 +307,12 @@ export function ContactForm({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="john@example.com"
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-slate-100 border-slate-300 text-slate-900 placeholder:text-slate-500"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cf-company" className="text-slate-300">
+            <Label htmlFor="cf-company" className="text-slate-700">
               Company
             </Label>
             <Input
@@ -320,12 +320,12 @@ export function ContactForm({
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder="Acme Inc."
-              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+              className="bg-slate-100 border-slate-300 text-slate-900 placeholder:text-slate-500"
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-slate-300">Tags</Label>
+            <Label className="text-slate-700">Tags</Label>
             {loadingTags ? (
               <div className="flex items-center gap-2 text-slate-500 text-sm">
                 <Loader2 className="size-3 animate-spin" />
@@ -363,12 +363,12 @@ export function ContactForm({
             )}
           </div>
 
-          <DialogFooter className="bg-slate-900 border-slate-700">
+          <DialogFooter className="bg-white border-slate-300">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
             >
               Cancel
             </Button>

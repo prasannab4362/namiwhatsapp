@@ -77,7 +77,7 @@ export default function RootPage() {
           <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">
             Sign In
           </Link>
-          <Link href="/dashboard" className="rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/30 hover:bg-primary-hover hover:scale-105 active:scale-95 transition-all">
+          <Link href="/dashboard" className="rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-slate-900 shadow-lg shadow-primary/30 hover:bg-primary-hover hover:scale-105 active:scale-95 transition-all">
             Get Started
           </Link>
         </motion.nav>
@@ -105,7 +105,7 @@ export default function RootPage() {
             Nami CRM gives you the superpower to automate replies, manage a shared team inbox, and track deals seamlessly—all from one beautiful dashboard.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/dashboard" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-primary px-10 py-4 text-lg font-bold text-white shadow-xl shadow-primary/30 hover:bg-primary-hover hover:-translate-y-1 transition-all">
+            <Link href="/dashboard" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-primary px-10 py-4 text-lg font-bold text-slate-900 shadow-xl shadow-primary/30 hover:bg-primary-hover hover:-translate-y-1 transition-all">
               Launch Dashboard <ArrowRight className="h-5 w-5" />
             </Link>
             <Link href="#features" className="w-full sm:w-auto flex items-center justify-center rounded-full bg-white border border-slate-200 px-10 py-4 text-lg font-bold text-slate-700 hover:bg-slate-50 transition-all">
@@ -164,7 +164,7 @@ export default function RootPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-32 px-6 bg-slate-950 text-white relative overflow-hidden">
+      <section className="py-32 px-6 bg-slate-50 text-slate-900 relative overflow-hidden">
         {/* Decorative background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/30 blur-[120px] rounded-full pointer-events-none" />
         
@@ -176,7 +176,7 @@ export default function RootPage() {
             className="text-center mb-20"
           >
             <h2 className="text-4xl lg:text-5xl font-extrabold mb-6">How it works</h2>
-            <p className="text-xl text-slate-400">Get up and running in minutes, not months.</p>
+            <p className="text-xl text-slate-600">Get up and running in minutes, not months.</p>
           </motion.div>
 
           <div className="space-y-12">
@@ -192,14 +192,14 @@ export default function RootPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="flex items-start gap-6 bg-slate-900/50 p-8 rounded-3xl border border-slate-800 backdrop-blur-sm"
+                className="flex items-start gap-6 bg-slate-900/50 p-8 rounded-3xl border border-slate-200 backdrop-blur-sm"
               >
-                <div className="flex-shrink-0 h-16 w-16 bg-primary rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg shadow-primary/20">
+                <div className="flex-shrink-0 h-16 w-16 bg-primary rounded-2xl flex items-center justify-center text-2xl font-black text-slate-900 shadow-lg shadow-primary/20">
                   {idx + 1}
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-slate-400 text-lg leading-relaxed">{step.desc}</p>
+                  <p className="text-slate-600 text-lg leading-relaxed">{step.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -214,7 +214,7 @@ export default function RootPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto bg-gradient-to-br from-primary to-emerald-500 rounded-3xl p-12 lg:p-20 shadow-2xl text-white"
+          className="max-w-4xl mx-auto bg-gradient-to-br from-primary to-emerald-500 rounded-3xl p-12 lg:p-20 shadow-2xl text-slate-900"
         >
           <h2 className="text-4xl lg:text-6xl font-extrabold mb-8">Ready to revolutionize your workflow?</h2>
           <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
@@ -248,7 +248,7 @@ export default function RootPage() {
               </div>
             </div>
 
-            <Link href="https://portfolio-up-six.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-3 text-sm font-bold text-white shadow-lg hover:bg-slate-800 transition-all">
+            <Link href="https://portfolio-up-six.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-bold text-slate-900 shadow-lg hover:bg-slate-100 transition-all">
               View My Portfolio <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
@@ -285,7 +285,7 @@ export default function RootPage() {
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto text-center border-t border-slate-100 pt-8 text-sm text-slate-400">
+        <div className="max-w-7xl mx-auto text-center border-t border-slate-100 pt-8 text-sm text-slate-600">
           © {new Date().getFullYear()} Nami CRM. All rights reserved.
         </div>
       </footer>

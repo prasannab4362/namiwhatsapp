@@ -110,12 +110,12 @@ const ROLE_CHIP: Record<
   agent: {
     icon: UserCog,
     label: 'Agent',
-    className: 'border-slate-700 bg-slate-800 text-slate-300',
+    className: 'border-slate-300 bg-slate-100 text-slate-700',
   },
   viewer: {
     icon: UserIcon,
     label: 'Viewer',
-    className: 'border-slate-800 bg-slate-900 text-slate-500',
+    className: 'border-slate-200 bg-white text-slate-500',
   },
 };
 
@@ -296,8 +296,8 @@ export function MembersTab() {
       {/* Header + invite button */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">Account members</h2>
-          <p className="text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-slate-900">Account members</h2>
+          <p className="text-sm text-slate-600">
             People with access to this account. Roles control what each
             teammate can do.
           </p>
@@ -314,7 +314,7 @@ export function MembersTab() {
       </div>
 
       {/* Roster */}
-      <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+      <Card className="bg-white border-slate-300 ring-0 ring-transparent">
         <CardContent className="p-0">
           <ul className="divide-y divide-slate-800">
             {members.map((member) => {
@@ -351,11 +351,11 @@ export function MembersTab() {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-white">
+                        <span className="truncate text-sm font-medium text-slate-900">
                           {member.full_name || 'Unnamed'}
                         </span>
                         {isSelf && (
-                          <Badge className="bg-slate-800 text-slate-300 border-slate-700 text-[10px] uppercase tracking-wide">
+                          <Badge className="bg-slate-100 text-slate-700 border-slate-300 text-[10px] uppercase tracking-wide">
                             You
                           </Badge>
                         )}
@@ -394,7 +394,7 @@ export function MembersTab() {
                         }
                       >
                         <SelectTrigger
-                          className="w-32 bg-slate-800 border-slate-700 text-slate-200"
+                          className="w-32 bg-slate-100 border-slate-300 text-slate-800"
                           disabled={isBusy}
                         >
                           <SelectValue />
@@ -446,11 +446,11 @@ export function MembersTab() {
       <RequireRole min="admin">
         <div>
           <div className="mb-2 flex items-center gap-2">
-            <UsersRound className="size-4 text-slate-400" />
-            <h3 className="text-sm font-semibold text-white">
+            <UsersRound className="size-4 text-slate-600" />
+            <h3 className="text-sm font-semibold text-slate-900">
               Pending invitations
             </h3>
-            <Badge className="bg-slate-800 text-slate-400 border-slate-700">
+            <Badge className="bg-slate-100 text-slate-600 border-slate-300">
               {invitations.length}
             </Badge>
           </div>
@@ -468,20 +468,20 @@ export function MembersTab() {
           ) : null}
 
           {invitations.length === 0 ? (
-            <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+            <Card className="bg-white border-slate-300 ring-0 ring-transparent">
               <CardContent className="flex flex-col items-center justify-center py-8 text-center">
                 <Mail className="size-6 text-slate-600" />
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-slate-600">
                   No pending invitations.
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Click <span className="text-slate-300">Invite member</span>{' '}
+                  Click <span className="text-slate-700">Invite member</span>{' '}
                   above to generate a shareable link.
                 </p>
               </CardContent>
             </Card>
           ) : (
-            <Card className="bg-slate-900 border-slate-700 ring-0 ring-transparent">
+            <Card className="bg-white border-slate-300 ring-0 ring-transparent">
               <CardContent className="p-0">
                 <ul className="divide-y divide-slate-800">
                   {invitations.map((inv) => {
@@ -494,7 +494,7 @@ export function MembersTab() {
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-white">
+                          <span className="text-sm font-medium text-slate-900">
                             {inv.label || 'Untitled invite'}
                           </span>
                           <span
@@ -544,15 +544,15 @@ export function MembersTab() {
           if (!open) setRemovingMember(null);
         }}
       >
-        <DialogContent className="bg-slate-900 border-slate-700 sm:max-w-sm">
+        <DialogContent className="bg-white border-slate-300 sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-white">
+            <DialogTitle className="flex items-center gap-2 text-slate-900">
               <AlertTriangle className="size-4 text-amber-400" />
               Remove member
             </DialogTitle>
-            <DialogDescription className="text-slate-400">
+            <DialogDescription className="text-slate-600">
               Remove{' '}
-              <span className="font-medium text-slate-300">
+              <span className="font-medium text-slate-700">
                 {removingMember?.full_name || 'this teammate'}
               </span>{' '}
               from the account? They&apos;ll be signed out of this account
@@ -560,18 +560,18 @@ export function MembersTab() {
               login isn&apos;t deleted.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="bg-slate-900 border-slate-700">
+          <DialogFooter className="bg-white border-slate-300">
             <Button
               variant="outline"
               onClick={() => setRemovingMember(null)}
-              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
             >
               Cancel
             </Button>
             <Button
               onClick={handleRemove}
               disabled={!!pendingMemberAction}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 hover:bg-red-700 text-slate-900"
             >
               {pendingMemberAction ? (
                 <>

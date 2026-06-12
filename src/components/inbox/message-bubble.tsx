@@ -30,11 +30,11 @@ interface MessageBubbleProps {
 function StatusIcon({ status }: { status: Message["status"] }) {
   switch (status) {
     case "sending":
-      return <Clock className="h-3 w-3 text-slate-400" />;
+      return <Clock className="h-3 w-3 text-slate-600" />;
     case "sent":
-      return <Check className="h-3 w-3 text-slate-400" />;
+      return <Check className="h-3 w-3 text-slate-600" />;
     case "delivered":
-      return <CheckCheck className="h-3 w-3 text-slate-400" />;
+      return <CheckCheck className="h-3 w-3 text-slate-600" />;
     case "read":
       return <CheckCheck className="h-3 w-3 text-blue-400" />;
     case "failed":
@@ -46,7 +46,7 @@ function StatusIcon({ status }: { status: Message["status"] }) {
 
 function MediaUnavailable({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-slate-700/40 px-3 py-2 text-xs text-slate-300">
+    <div className="flex items-center gap-2 rounded-lg bg-slate-700/40 px-3 py-2 text-xs text-slate-700">
       <ImageOff className="h-4 w-4 shrink-0 text-slate-500" />
       <span>{label} unavailable</span>
     </div>
@@ -183,7 +183,7 @@ function MessageContent({ message }: { message: Message }) {
           rel="noopener noreferrer"
           className="flex items-center gap-2 rounded-lg bg-slate-700/50 px-3 py-2 text-sm hover:bg-slate-700"
         >
-          <FileText className="h-5 w-5 shrink-0 text-slate-400" />
+          <FileText className="h-5 w-5 shrink-0 text-slate-600" />
           <span className="truncate">
             {message.content_text || "Document"}
           </span>
@@ -208,7 +208,7 @@ function MessageContent({ message }: { message: Message }) {
     case "location":
       return (
         <div className="flex items-center gap-2 text-sm">
-          <MapPin className="h-4 w-4 shrink-0 text-slate-400" />
+          <MapPin className="h-4 w-4 shrink-0 text-slate-600" />
           <span>{message.content_text || "Location shared"}</span>
         </div>
       );
@@ -221,7 +221,7 @@ function MessageContent({ message }: { message: Message }) {
       // tap rather than the customer typing the same words.
       return (
         <div className="flex flex-col gap-0.5">
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-slate-400">
+          <span className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-slate-600">
             <CornerDownLeft className="h-3 w-3" />
             Button reply
           </span>
@@ -265,7 +265,7 @@ export function MessageBubble({
           "relative rounded-2xl px-3 py-2",
           isAgent
             ? "rounded-br-md bg-primary text-primary-foreground"
-            : "rounded-bl-md bg-slate-800 text-slate-100",
+            : "rounded-bl-md bg-slate-100 text-slate-100",
         )}
       >
         {reply && (

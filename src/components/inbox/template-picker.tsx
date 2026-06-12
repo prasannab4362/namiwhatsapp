@@ -183,13 +183,13 @@ export function TemplatePicker({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="border-slate-700 bg-slate-900 sm:max-w-lg">
+      <DialogContent className="border-slate-300 bg-white sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-white">
+          <DialogTitle className="flex items-center gap-2 text-slate-900">
             <LayoutTemplate className="h-4 w-4 text-primary" />
             {selected ? selected.name : "Send template"}
           </DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogDescription className="text-slate-600">
             {selected
               ? "Fill in the placeholders to render this template. Meta requires every variable to be set."
               : "Pick an approved WhatsApp template to send to this contact."}
@@ -203,8 +203,8 @@ export function TemplatePicker({
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
               </div>
             ) : templates.length === 0 ? (
-              <div className="rounded-md border border-slate-800 bg-slate-950/50 p-6 text-center">
-                <p className="text-sm text-slate-300">No approved templates</p>
+              <div className="rounded-md border border-slate-200 bg-slate-50/50 p-6 text-center">
+                <p className="text-sm text-slate-700">No approved templates</p>
                 <p className="mt-1 text-xs text-slate-500">
                   Approve a template in Meta WhatsApp Manager, then sync it
                   from Settings → Templates.
@@ -216,12 +216,12 @@ export function TemplatePicker({
                   key={t.id}
                   type="button"
                   onClick={() => pickTemplate(t)}
-                  className="w-full rounded-md border border-slate-800 bg-slate-950/50 p-3 text-left transition-colors hover:border-primary/40 hover:bg-slate-900"
+                  className="w-full rounded-md border border-slate-200 bg-slate-50/50 p-3 text-left transition-colors hover:border-primary/40 hover:bg-white"
                 >
                   <div className="flex items-start gap-2">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate text-sm font-medium text-white">
+                        <p className="truncate text-sm font-medium text-slate-900">
                           {t.name}
                         </p>
                         <Badge className="border border-primary/30 bg-primary/20 text-[10px] text-primary">
@@ -233,7 +233,7 @@ export function TemplatePicker({
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 line-clamp-2 text-xs text-slate-400">
+                      <p className="mt-1 line-clamp-2 text-xs text-slate-600">
                         {t.body_text}
                       </p>
                     </div>
@@ -245,9 +245,9 @@ export function TemplatePicker({
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="rounded-md border border-slate-800 bg-slate-950/50 p-3">
-              <p className="mb-1 text-xs text-slate-400">Preview</p>
-              <p className="whitespace-pre-wrap text-sm text-slate-200">
+            <div className="rounded-md border border-slate-200 bg-slate-50/50 p-3">
+              <p className="mb-1 text-xs text-slate-600">Preview</p>
+              <p className="whitespace-pre-wrap text-sm text-slate-800">
                 {renderBodyPreview(selected.body_text, params)}
               </p>
               {selected.footer_text && (
@@ -258,20 +258,20 @@ export function TemplatePicker({
             </div>
             {slots && slots.headerVarCount > 0 && (
               <div className="space-y-1">
-                <Label className="text-xs text-slate-300">
+                <Label className="text-xs text-slate-700">
                   {`Header {{1}}`}
                 </Label>
                 <Input
                   value={headerText}
                   onChange={(e) => setHeaderText(e.target.value)}
                   placeholder="Value for the header variable"
-                  className="border-slate-700 bg-slate-800 text-white placeholder:text-slate-500"
+                  className="border-slate-300 bg-slate-100 text-slate-900 placeholder:text-slate-500"
                 />
               </div>
             )}
             {slots?.bodyVars.map((v, i) => (
               <div key={v} className="space-y-1">
-                <Label className="text-xs text-slate-300">{`Body {{${v}}}`}</Label>
+                <Label className="text-xs text-slate-700">{`Body {{${v}}}`}</Label>
                 <Input
                   value={params[i] ?? ""}
                   onChange={(e) => {
@@ -280,13 +280,13 @@ export function TemplatePicker({
                     setParams(next);
                   }}
                   placeholder={`Value for {{${v}}}`}
-                  className="border-slate-700 bg-slate-800 text-white placeholder:text-slate-500"
+                  className="border-slate-300 bg-slate-100 text-slate-900 placeholder:text-slate-500"
                 />
               </div>
             ))}
             {slots?.urlButtonSlots.map((slot) => (
               <div key={slot.index} className="space-y-1">
-                <Label className="text-xs text-slate-300">
+                <Label className="text-xs text-slate-700">
                   {`URL button "${slot.text}" — value for `}{`{{1}}`}
                 </Label>
                 <Input
@@ -298,7 +298,7 @@ export function TemplatePicker({
                     }))
                   }
                   placeholder="URL suffix value"
-                  className="border-slate-700 bg-slate-800 text-white placeholder:text-slate-500"
+                  className="border-slate-300 bg-slate-100 text-slate-900 placeholder:text-slate-500"
                 />
                 <p className="text-[10px] text-slate-500 break-all">
                   Final URL: {slot.url.replace(/\{\{1\}\}/g, buttonParams[slot.index] || "{{1}}")}
@@ -314,7 +314,7 @@ export function TemplatePicker({
               <Button
                 variant="outline"
                 onClick={resetSelection}
-                className="border-slate-700 text-slate-300 hover:bg-slate-800"
+                className="border-slate-300 text-slate-700 hover:bg-slate-100"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -331,7 +331,7 @@ export function TemplatePicker({
             <Button
               variant="outline"
               onClick={() => handleOpenChange(false)}
-              className="border-slate-700 text-slate-300 hover:bg-slate-800"
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
             >
               Cancel
             </Button>
