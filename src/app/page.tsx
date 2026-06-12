@@ -19,14 +19,14 @@ export default function RootPage() {
       </header>
       
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <h1 className="max-w-4xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl mb-6">
+        <h1 className="max-w-4xl text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl mb-6 animate-in zoom-in-95 duration-700">
           The ultimate WhatsApp CRM for your business.
         </h1>
-        <p className="max-w-2xl text-lg text-slate-600 mb-10">
+        <p className="max-w-2xl text-lg text-slate-600 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both">
           Manage your shared inbox, contacts, sales pipelines, broadcasts, and no-code automations seamlessly with Nami CRM. Built for modern teams.
         </p>
-        <div className="flex gap-4">
-          <Link href="/dashboard" className="rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-hover transition-colors">
+        <div className="flex gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+          <Link href="/dashboard" className="rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-hover transition-all hover:scale-105 active:scale-95 duration-200">
             Open Dashboard
           </Link>
         </div>
