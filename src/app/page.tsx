@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MessageSquare, Workflow, Users, LayoutDashboard, ArrowRight, Bot, CheckCircle, Zap } from "lucide-react";
 
-const TiltCard = ({ title, description, icon: Icon }: any) => {
+const TiltCard = ({ title, description, icon: Icon }: { title: string, description: string, icon: React.ElementType }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
@@ -238,7 +238,7 @@ export default function RootPage() {
           >
             <h2 className="text-3xl font-extrabold text-slate-900 mb-4">About the Author</h2>
             <p className="text-lg text-slate-600 mb-8 max-w-2xl">
-              Hi, I'm Prasanna B, the creator of Nami CRM. I build intelligent AI products and innovative web solutions. Connect with me or check out my portfolio!
+              Hi, I&apos;m Prasanna B, the creator of Nami CRM. I build intelligent AI products and innovative web solutions. Connect with me or check out my portfolio!
             </p>
             
             {/* LinkedIn Badge */}
