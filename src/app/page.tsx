@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { MessageSquare, Workflow, Users, LayoutDashboard, ArrowRight, Bot, CheckCircle, Zap } from "lucide-react";
+import { MessageSquare, Workflow, Users, LayoutDashboard, ArrowRight, Bot, Zap } from "lucide-react";
 
 const TiltCard = ({ title, description, icon: Icon }: { title: string, description: string, icon: React.ElementType }) => {
   const x = useMotionValue(0);
