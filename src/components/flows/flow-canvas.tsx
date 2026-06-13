@@ -564,7 +564,7 @@ function NodeEditSheet({
         className="flex w-full flex-col gap-0 border-l border-slate-200 bg-slate-50 p-0 sm:max-w-md"
       >
         <SheetHeader className="border-b border-slate-200 px-5 py-4">
-          <SheetTitle className="flex items-center gap-2 text-slate-100">
+          <SheetTitle className="flex items-center gap-2 text-slate-900">
             <Icon className={cn("h-4 w-4 shrink-0", meta.color)} />
             <span>{meta.label}</span>
             {isEntry && (

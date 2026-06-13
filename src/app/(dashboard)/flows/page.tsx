@@ -247,7 +247,7 @@ export default function FlowsPage() {
             `sm:max-w-sm` baked into its default classes. Without the
             sm: prefix our override applies at base only and the
             sm-scoped 384px wins at every real desktop breakpoint. */}
-        <DialogContent className="sm:max-w-4xl bg-white text-slate-100">
+        <DialogContent className="sm:max-w-4xl bg-white text-slate-900">
           <DialogHeader>
             <DialogTitle>Create a new flow</DialogTitle>
             <DialogDescription className="text-slate-600">
