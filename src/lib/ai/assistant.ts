@@ -23,17 +23,13 @@ export async function handleAIAssistant(
   phoneNumberId: string,
   accessToken: string
 ) {
-  if (!process.env.GEMINI_API_KEY) {
-    console.warn("GEMINI_API_KEY is not set. AI Assistant will not reply.");
-    return;
-  }
-
   try {
     const supabase = getSupabaseAdmin();
 
     // 0. Fetch account AI settings
     let enabled = true;
     let modelName = "gemini-1.5-flash";
+    let customApiKey = "";
     let systemPrompt = `You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
     let knowledgeBase = "";
     let notificationEmail = process.env.NOTIFICATION_EMAIL || "";
@@ -49,6 +45,7 @@ export async function handleAIAssistant(
         console.log("[AI Assistant] AI is globally disabled for this account.");
         return;
       }
+      if (aiSettings.api_key) customApiKey = aiSettings.api_key;
       if (aiSettings.model_name) {
         // Map user model selection to Generative AI SDK model identifier
         const m = aiSettings.model_name.toLowerCase();
@@ -63,6 +60,12 @@ export async function handleAIAssistant(
       if (aiSettings.system_prompt) systemPrompt = aiSettings.system_prompt;
       if (aiSettings.knowledge_base) knowledgeBase = aiSettings.knowledge_base;
       if (aiSettings.notification_email) notificationEmail = aiSettings.notification_email;
+    }
+
+    const apiKey = customApiKey || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.warn("GEMINI_API_KEY is not set in Environment or AI Settings. AI Assistant will not reply.");
+      return;
     }
 
     const fullSystemInstruction = `${systemPrompt}
@@ -83,7 +86,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       parts: [{ text: msg.content_text || "" }],
     })) || [];
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(apiKey);
     
     const model = genAI.getGenerativeModel({
       model: modelName,
