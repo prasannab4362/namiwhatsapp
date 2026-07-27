@@ -701,20 +701,25 @@ export function MessageThread({
     async (active: boolean) => {
       if (!conversation) return;
 
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("conversations")
-        .update({ bot_active: active })
-        .eq("id", conversation.id);
+      try {
+        const res = await fetch(`/api/conversations/${conversation.id}/bot-status`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bot_active: active }),
+        });
 
-      if (error) {
-        console.error("Failed to update bot status:", error);
-        toast.error("Failed to update bot status");
-        return;
-      }
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || "Failed to update bot status");
+        }
 
-      if (onBotActiveChange) {
-        onBotActiveChange(conversation.id, active);
+        if (onBotActiveChange) {
+          onBotActiveChange(conversation.id, active);
+        }
+        toast.success(active ? "AI Bot activated for this thread" : "Human Mode activated (AI paused)");
+      } catch (err: any) {
+        console.error("Failed to update bot status:", err);
+        toast.error(err.message || "Failed to update bot status");
       }
     },
     [conversation, onBotActiveChange]
