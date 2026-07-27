@@ -21,6 +21,8 @@ import {
   Clock,
   ArrowLeft,
   RefreshCw,
+  Bot,
+  Hand,
 } from "lucide-react";
 import { format, isToday, isYesterday, differenceInHours } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -63,6 +65,10 @@ interface MessageThreadProps {
   onAssignChange: (
     conversationId: string,
     assignedAgentId: string | null,
+  ) => void;
+  onBotActiveChange?: (
+    conversationId: string,
+    botActive: boolean,
   ) => void;
   /**
    * On mobile, the thread is shown full-screen with the conversation list
@@ -140,6 +146,7 @@ export function MessageThread({
   onUpdateMessage,
   onStatusChange,
   onAssignChange,
+  onBotActiveChange,
   onBack,
   resyncToken = 0,
   onRefresh,
@@ -690,6 +697,29 @@ export function MessageThread({
     [conversation, onAssignChange],
   );
 
+  const handleBotActiveChange = useCallback(
+    async (active: boolean) => {
+      if (!conversation) return;
+
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("conversations")
+        .update({ bot_active: active })
+        .eq("id", conversation.id);
+
+      if (error) {
+        console.error("Failed to update bot status:", error);
+        toast.error("Failed to update bot status");
+        return;
+      }
+
+      if (onBotActiveChange) {
+        onBotActiveChange(conversation.id, active);
+      }
+    },
+    [conversation, onBotActiveChange]
+  );
+
   // Empty state — same WhatsApp-style doodle background as the active
   // thread below, so swapping between empty/selected doesn't change the
   // pattern under the user's eye.
@@ -861,6 +891,29 @@ export function MessageThread({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* AI / Human toggle */}
+          <button
+            type="button"
+            onClick={() => handleBotActiveChange(!(conversation.bot_active ?? true))}
+            className={cn(
+              "inline-flex h-7 items-center justify-center gap-1 rounded-md px-2 text-xs transition-colors hover:bg-slate-100",
+              (conversation.bot_active ?? true) ? "text-primary" : "text-slate-600"
+            )}
+            title={(conversation.bot_active ?? true) ? "AI is replying (Click to take over)" : "Human mode (Click to enable AI)"}
+          >
+            {(conversation.bot_active ?? true) ? (
+              <>
+                <Bot className="h-3 w-3" />
+                <span className="hidden sm:inline">AI Active</span>
+              </>
+            ) : (
+              <>
+                <Hand className="h-3 w-3" />
+                <span className="hidden sm:inline">Human Mode</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
