@@ -43,7 +43,7 @@ export function useNotifications() {
           
           // Only notify for incoming messages (customer sent)
           if (newMessage.sender_type === "customer") {
-            const title = `New message from ${newMessage.sender_name || newMessage.sender_id}`;
+            const title = "New WhatsApp Message";
             const body = newMessage.content_text || "Sent an attachment";
             
             // Trigger browser notification

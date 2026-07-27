@@ -277,6 +277,7 @@ async function processWebhook(body: { entry?: WhatsAppWebhookEntry[] }) {
           // inserts that need it for NOT NULL FK compliance. Always
           // the admin who saved the WhatsApp config.
           config.user_id,
+          config.phone_number_id,
           decryptedAccessToken
         )
       }
@@ -511,6 +512,7 @@ async function processMessage(
   // (contacts, conversations). Always the admin who saved the
   // WhatsApp config; the choice is arbitrary post-017 but stable.
   configOwnerUserId: string,
+  phoneNumberId: string,
   accessToken: string
 ) {
   const senderPhone = normalizePhone(message.from)
@@ -691,8 +693,8 @@ async function processMessage(
         contactRecord.id,
         inboundText,
         configOwnerUserId,
-        config.phone_number_id,
-        decryptedAccessToken
+        phoneNumberId,
+        accessToken
       );
     } catch (err) {
       console.error('[ai_assistant] dispatch failed:', err);
