@@ -503,6 +503,26 @@ export default function InboxPage() {
     [activeConversation]
   );
 
+  const handleBotActiveChange = useCallback(
+    (conversationId: string, botActive: boolean) => {
+      setConversations((prev) =>
+        prev.map((c) =>
+          c.id === conversationId
+            ? { ...c, bot_active: botActive }
+            : c
+        )
+      );
+      if (activeConversation?.id === conversationId) {
+        setActiveConversation((prev) =>
+          prev
+            ? { ...prev, bot_active: botActive }
+            : prev
+        );
+      }
+    },
+    [activeConversation]
+  );
+
   // On mobile (<lg) we show a SINGLE pane — either the list or the
   // thread — rather than cramming both side-by-side. Selecting a
   // conversation slides the thread in; the thread's back button pops
@@ -567,6 +587,7 @@ export default function InboxPage() {
             onUpdateMessage={handleUpdateMessage}
             onStatusChange={handleStatusChange}
             onAssignChange={handleAssignChange}
+            onBotActiveChange={handleBotActiveChange}
             onBack={handleCloseConversation}
             resyncToken={resyncToken}
             onRefresh={handleManualRefresh}
