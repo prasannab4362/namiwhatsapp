@@ -678,6 +678,7 @@ async function processMessage(
     isFirstInboundMessage,
   })
   const flowConsumed = flowResult.consumed
+  const inboundText = contentText ?? message.text?.body ?? ''
 
   // ============================================================
   // Gemini AI Assistant dispatch
