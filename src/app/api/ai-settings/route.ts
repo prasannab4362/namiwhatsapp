@@ -15,6 +15,7 @@ function supabaseAdmin() {
 const DEFAULT_SETTINGS = {
   enabled: true,
   model_name: "gemini-3.1-flash-lite",
+  api_key: "",
   system_prompt: `You are an intelligent, polite, and efficient AI sales & support assistant for our business on WhatsApp. 
 Your goal is to assist customers, answer questions accurately, and provide relevant information.
 
@@ -63,7 +64,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { accountId, enabled, model_name, system_prompt, knowledge_base, notification_email } = body;
+    const { accountId, enabled, model_name, api_key, system_prompt, knowledge_base, notification_email } = body;
 
     if (!accountId) {
       return NextResponse.json(
@@ -72,7 +73,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const payload = {
+    const payload: any = {
       account_id: accountId,
       enabled: enabled ?? true,
       model_name: model_name || "gemini-3.1-flash-lite",
@@ -81,6 +82,10 @@ export async function POST(request: Request) {
       notification_email: notification_email ?? "",
       updated_at: new Date().toISOString(),
     };
+
+    if (typeof api_key === "string") {
+      payload.api_key = api_key;
+    }
 
     const { data, error } = await supabaseAdmin()
       .from("ai_settings")
