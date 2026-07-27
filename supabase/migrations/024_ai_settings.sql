@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.ai_settings (
   account_id UUID NOT NULL REFERENCES public.accounts(id) ON DELETE CASCADE UNIQUE,
   enabled BOOLEAN NOT NULL DEFAULT true,
   model_name TEXT NOT NULL DEFAULT 'gemini-2.0-flash-lite',
+  api_key TEXT DEFAULT '',
   system_prompt TEXT NOT NULL DEFAULT 'You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.',
   knowledge_base TEXT DEFAULT '',
   notification_email TEXT DEFAULT '',
