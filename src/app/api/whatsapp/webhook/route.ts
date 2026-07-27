@@ -11,6 +11,7 @@ import {
   handleTemplateWebhookChange,
   isTemplateWebhookField,
 } from '@/lib/whatsapp/template-webhook'
+import { handleAIAssistant } from '@/lib/ai/assistant'
 
 // Lazy-initialized to avoid build-time crash when env vars are missing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -678,12 +679,30 @@ async function processMessage(
   })
   const flowConsumed = flowResult.consumed
 
+  // ============================================================
+  // Gemini AI Assistant dispatch
+  // ============================================================
+  if (conversation.bot_active !== false && !flowConsumed) {
+    try {
+      await handleAIAssistant(
+        accountId,
+        conversation.id,
+        contactRecord.id,
+        inboundText,
+        configOwnerUserId,
+        config.phone_number_id,
+        decryptedAccessToken
+      );
+    } catch (err) {
+      console.error('[ai_assistant] dispatch failed:', err);
+    }
+  }
+
   // Fire any automations that react to this webhook event. All dispatches
   // run here (not earlier) so the contact, conversation, and inbound
   // message all exist before any step — including send_message — runs.
   // Fire-and-forget: a slow or failing automation must not block the
   // webhook's 200 OK response to Meta.
-  const inboundText = contentText ?? message.text?.body ?? ''
   const automationTriggers: (
     | 'new_contact_created'
     | 'first_inbound_message'
