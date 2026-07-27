@@ -31,6 +31,45 @@ export async function handleAIAssistant(
   try {
     const supabase = getSupabaseAdmin();
 
+    // 0. Fetch account AI settings
+    let enabled = true;
+    let modelName = "gemini-1.5-flash";
+    let systemPrompt = `You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
+    let knowledgeBase = "";
+    let notificationEmail = process.env.NOTIFICATION_EMAIL || "";
+
+    const { data: aiSettings } = await supabase
+      .from("ai_settings")
+      .select("*")
+      .eq("account_id", accountId)
+      .maybeSingle();
+
+    if (aiSettings) {
+      if (aiSettings.enabled === false) {
+        console.log("[AI Assistant] AI is globally disabled for this account.");
+        return;
+      }
+      if (aiSettings.model_name) {
+        // Map user model selection to Generative AI SDK model identifier
+        const m = aiSettings.model_name.toLowerCase();
+        if (m.includes("2.0")) {
+          modelName = "gemini-2.0-flash-lite";
+        } else if (m.includes("1.5-pro")) {
+          modelName = "gemini-1.5-pro";
+        } else {
+          modelName = "gemini-1.5-flash";
+        }
+      }
+      if (aiSettings.system_prompt) systemPrompt = aiSettings.system_prompt;
+      if (aiSettings.knowledge_base) knowledgeBase = aiSettings.knowledge_base;
+      if (aiSettings.notification_email) notificationEmail = aiSettings.notification_email;
+    }
+
+    const fullSystemInstruction = `${systemPrompt}
+
+${knowledgeBase ? `BUSINESS KNOWLEDGE BASE & FAQS:\n${knowledgeBase}\n` : ""}
+CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requires human intelligence, you MUST include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
+
     // 1. Fetch recent messages to build context
     const { data: messages } = await supabase
       .from("messages")
@@ -46,11 +85,9 @@ export async function handleAIAssistant(
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     
-    // The user requested "gemini 3.1 flash lite" but let's use gemini-1.5-flash as it's the current recommended fast model
-    // or specifically gemini-1.5-flash-8b (lite version)
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: "You are the GAS AI assistant. You answer queries for GAS AI. If you feel the lead is getting hot or requires human intelligence, you MUST include the exact phrase 'HUMAN_HANDOVER_REQUIRED' in your response.",
+      model: modelName,
+      systemInstruction: fullSystemInstruction,
     });
 
     const chat = model.startChat({
@@ -69,12 +106,14 @@ export async function handleAIAssistant(
       const contact = await supabase.from('contacts').select('name, phone').eq('id', contactId).single();
       const contactInfo = contact.data ? `${contact.data.name} (${contact.data.phone})` : contactId;
 
-      await sendEmail({
-        to: process.env.NOTIFICATION_EMAIL || "admin@example.com",
-        subject: "🔥 HOT LEAD ALERT: Human Intelligence Needed",
-        text: `A lead requires human attention.\n\nContact: ${contactInfo}\nConversation ID: ${conversationId}\n\nPlease check the CRM dashboard immediately.`,
-        html: `<p>A lead requires human attention.</p><p><strong>Contact:</strong> ${contactInfo}</p><p><strong>Conversation ID:</strong> ${conversationId}</p><p>Please check the CRM dashboard immediately.</p>`
-      });
+      if (notificationEmail) {
+        await sendEmail({
+          to: notificationEmail,
+          subject: "🔥 HOT LEAD ALERT: Human Intelligence Needed",
+          text: `A lead requires human attention.\n\nContact: ${contactInfo}\nConversation ID: ${conversationId}\n\nPlease check the CRM dashboard immediately.`,
+          html: `<p>A lead requires human attention.</p><p><strong>Contact:</strong> ${contactInfo}</p><p><strong>Conversation ID:</strong> ${conversationId}</p><p>Please check the CRM dashboard immediately.</p>`
+        });
+      }
 
       // Disable AI for this conversation so humans can take over
       await supabase.from("conversations").update({ bot_active: false }).eq("id", conversationId);
