@@ -81,10 +81,39 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       .order("created_at", { ascending: false })
       .limit(10);
 
-    const history = messages?.reverse()?.map((msg: any) => ({
+    // Build alternating chat history for Gemini
+    const dbMessages = messages || [];
+    
+    // The latest message in the DB is the current inbound message.
+    // We exclude it from the history as it will be passed to sendMessage.
+    const rawHistory = dbMessages.slice(1).reverse().map((msg: any) => ({
       role: msg.sender_type === "customer" ? "user" : "model",
-      parts: [{ text: msg.content_text || "" }],
-    })) || [];
+      text: msg.content_text || "",
+    }));
+
+    // Merge consecutive messages of the same role
+    const mergedHistory: { role: string; text: string }[] = [];
+    for (const item of rawHistory) {
+      if (mergedHistory.length > 0 && mergedHistory[mergedHistory.length - 1].role === item.role) {
+        mergedHistory[mergedHistory.length - 1].text += "\n" + item.text;
+      } else {
+        mergedHistory.push(item);
+      }
+    }
+
+    // Ensure history does not end with a 'user' message, as the new inbound message is a 'user' message
+    let finalInboundText = inboundText;
+    if (mergedHistory.length > 0 && mergedHistory[mergedHistory.length - 1].role === "user") {
+      const lastUserTurn = mergedHistory.pop();
+      if (lastUserTurn) {
+        finalInboundText = lastUserTurn.text + "\n" + finalInboundText;
+      }
+    }
+
+    const history = mergedHistory.map(item => ({
+      role: item.role,
+      parts: [{ text: item.text }],
+    }));
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
@@ -97,7 +126,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       history,
     });
 
-    const result = await chat.sendMessage(inboundText);
+    const result = await chat.sendMessage(finalInboundText);
     let responseText = result.response.text();
 
     const handoverRequired = responseText.includes("HUMAN_HANDOVER_REQUIRED");
