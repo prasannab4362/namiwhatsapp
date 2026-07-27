@@ -29,6 +29,7 @@ export function AISettingsPanel() {
 
   const [enabled, setEnabled] = useState(true);
   const [modelName, setModelName] = useState('gemini-3.1-flash-lite');
+  const [apiKey, setApiKey] = useState('');
   const [systemPrompt, setSystemPrompt] = useState('');
   const [knowledgeBase, setKnowledgeBase] = useState('');
   const [notificationEmail, setNotificationEmail] = useState('');
@@ -42,6 +43,7 @@ export function AISettingsPanel() {
         const data = await res.json();
         setEnabled(data.enabled ?? true);
         setModelName(data.model_name || 'gemini-3.1-flash-lite');
+        setApiKey(data.api_key || '');
         setSystemPrompt(data.system_prompt || '');
         setKnowledgeBase(data.knowledge_base || '');
         setNotificationEmail(data.notification_email || '');
@@ -69,6 +71,7 @@ export function AISettingsPanel() {
           accountId,
           enabled,
           model_name: modelName,
+          api_key: apiKey,
           system_prompt: systemPrompt,
           knowledge_base: knowledgeBase,
           notification_email: notificationEmail,
@@ -153,6 +156,24 @@ export function AISettingsPanel() {
             </select>
             <p className="text-xs text-slate-500">
               Select the Gemini model variant to power your WhatsApp assistant responses.
+            </p>
+          </div>
+
+          {/* Gemini API Key */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+              <Sparkles className="h-4 w-4 text-slate-600" />
+              Google Gemini API Key
+            </Label>
+            <Input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="AIzaSy... (Leave empty to use GEMINI_API_KEY from Vercel/Environment)"
+              className="text-sm font-mono"
+            />
+            <p className="text-xs text-slate-500">
+              Paste your Gemini API Key here, or set <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-700">GEMINI_API_KEY</code> in your environment variables.
             </p>
           </div>
 
