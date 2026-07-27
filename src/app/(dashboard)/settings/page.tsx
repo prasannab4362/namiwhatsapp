@@ -10,6 +10,7 @@ import {
   UsersRound,
   Coins,
   SlidersHorizontal,
+  Bot,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCan } from '@/hooks/use-can';
@@ -23,9 +24,11 @@ import { AppearancePanel } from '@/components/settings/appearance-panel';
 import { MembersTab } from '@/components/settings/members-tab';
 import { DealsSettings } from '@/components/settings/deals-settings';
 import { CustomFieldsSettings } from '@/components/settings/custom-fields-settings';
+import { AISettingsPanel } from '@/components/settings/ai-settings-panel';
 
 const TAB_VALUES = [
   'profile',
+  'ai',
   'whatsapp',
   'templates',
   'tags',
@@ -86,6 +89,13 @@ export default function SettingsPage() {
             Profile
           </TabsTrigger>
           <TabsTrigger
+            value="ai"
+            className="data-active:text-primary text-slate-600 data-active:bg-slate-100"
+          >
+            <Bot className="size-4 text-emerald-600" />
+            AI Assistant
+          </TabsTrigger>
+          <TabsTrigger
             value="whatsapp"
             className="data-active:text-primary text-slate-600 data-active:bg-slate-100"
           >
@@ -142,6 +152,10 @@ export default function SettingsPage() {
           <ProfileForm />
           <PasswordForm />
           <SessionsCard />
+        </TabsContent>
+
+        <TabsContent value="ai">
+          <AISettingsPanel />
         </TabsContent>
 
         <TabsContent value="whatsapp">
