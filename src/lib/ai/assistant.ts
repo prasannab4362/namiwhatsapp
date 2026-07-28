@@ -148,8 +148,9 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
         });
       }
 
-      // Disable AI for this conversation so humans can take over
-      await supabase.from("conversations").update({ bot_active: false }).eq("id", conversationId);
+      // Automatically disabling AI is disabled per user request. 
+      // User will manually toggle the AI status from the CRM interface instead.
+      // await supabase.from("conversations").update({ bot_active: false }).eq("id", conversationId);
     }
 
     if (responseText) {
