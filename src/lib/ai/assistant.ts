@@ -105,6 +105,11 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       }
     }
 
+    // Ensure history starts with a 'user' message (Gemini SDK requirement)
+    while (mergedHistory.length > 0 && mergedHistory[0].role === "model") {
+      mergedHistory.shift();
+    }
+
     // Ensure history does not end with a 'user' message, as the new inbound message is a 'user' message
     let finalInboundText = inboundText;
     if (mergedHistory.length > 0 && mergedHistory[mergedHistory.length - 1].role === "user") {
