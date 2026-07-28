@@ -34,7 +34,7 @@ export async function handleAIAssistant(
 
     // 0. Fetch account AI settings
     let enabled = true;
-    let modelName = "gemini-1.5-flash";
+    let modelName = "gemini-3.1-flash-lite";
     let systemPrompt = `You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
     let knowledgeBase = "";
     let notificationEmail = process.env.NOTIFICATION_EMAIL || "";
@@ -52,15 +52,7 @@ export async function handleAIAssistant(
       }
       if (aiSettings.api_key) customApiKey = aiSettings.api_key;
       if (aiSettings.model_name) {
-        // Map user model selection to Generative AI SDK model identifier
-        const m = aiSettings.model_name.toLowerCase();
-        if (m.includes("2.0")) {
-          modelName = "gemini-2.0-flash-lite";
-        } else if (m.includes("1.5-pro")) {
-          modelName = "gemini-1.5-pro";
-        } else {
-          modelName = "gemini-1.5-flash";
-        }
+        modelName = aiSettings.model_name;
       }
       if (aiSettings.system_prompt) systemPrompt = aiSettings.system_prompt;
       if (aiSettings.knowledge_base) knowledgeBase = aiSettings.knowledge_base;
