@@ -69,8 +69,7 @@ export async function handleAIAssistant(
 
     const apiKey = customApiKey || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      console.warn("GEMINI_API_KEY is not set in Environment or AI Settings. AI Assistant will not reply.");
-      return;
+      throw new Error("GEMINI_API_KEY is not set in Environment or AI Settings.");
     }
 
     const fullSystemInstruction = `${systemPrompt}
@@ -186,7 +185,19 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       }).eq("id", conversationId);
     }
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in AI Assistant:", error);
+    try {
+      await getSupabaseAdmin().from("messages").insert({
+        conversation_id: conversationId,
+        sender_type: "agent",
+        content_type: "text",
+        content_text: `⚠️ [AI Assistant Error]: ${error.message || error}`,
+        status: "failed",
+        created_at: new Date().toISOString(),
+      });
+    } catch (insertErr) {
+      console.error("Failed to log AI error to database:", insertErr);
+    }
   }
 }
