@@ -28,13 +28,13 @@ export async function handleAIAssistant(
   phoneNumberId: string,
   accessToken: string
 ) {
+  let customApiKey = "";
   try {
     const supabase = getSupabaseAdmin();
 
     // 0. Fetch account AI settings
     let enabled = true;
     let modelName = "gemini-1.5-flash";
-    let customApiKey = "";
     let systemPrompt = `You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
     let knowledgeBase = "";
     let notificationEmail = process.env.NOTIFICATION_EMAIL || "";
@@ -193,11 +193,28 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
   } catch (error: any) {
     console.error("Error in AI Assistant:", error);
     try {
+      let diagInfo = "";
+      const apiKey = customApiKey || process.env.GEMINI_API_KEY;
+      if (apiKey) {
+        try {
+          const diagRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+          const diagData = await diagRes.json().catch(() => ({}));
+          if (diagData.error) {
+            diagInfo = ` [Key Diagnostic: ${diagData.error.message || JSON.stringify(diagData.error)}]`;
+          } else if (diagData.models && Array.isArray(diagData.models)) {
+            const names = diagData.models.slice(0, 5).map((m: any) => m.name.replace("models/", "")).join(", ");
+            diagInfo = ` [Supported models: ${names}]`;
+          }
+        } catch (diagErr: any) {
+          diagInfo = ` [Diagnostic fetch failed: ${diagErr.message || diagErr}]`;
+        }
+      }
+
       await getSupabaseAdmin().from("messages").insert({
         conversation_id: conversationId,
         sender_type: "agent",
         content_type: "text",
-        content_text: `⚠️ [AI Assistant Error]: ${error.message || error}`,
+        content_text: `⚠️ [AI Assistant Error]: ${error.message || error}${diagInfo}`,
         status: "failed",
         created_at: new Date().toISOString(),
       });
