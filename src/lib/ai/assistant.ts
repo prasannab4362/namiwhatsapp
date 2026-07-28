@@ -14,6 +14,11 @@ function getSupabaseAdmin() {
   return supabaseAdmin;
 }
 
+/**
+ * Handles incoming customer messages and generates replies using Google Gemini.
+ * It builds a sanitized, alternating role history to comply with Gemini's SDK constraints,
+ * fallback-resolving to the GEMINI_API_KEY environment variable if no custom key is provided.
+ */
 export async function handleAIAssistant(
   accountId: string,
   conversationId: string,
