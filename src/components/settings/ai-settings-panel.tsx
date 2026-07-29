@@ -84,9 +84,10 @@ export function AISettingsPanel() {
       }
 
       toast.success('AI Assistant Settings saved successfully!');
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to save settings';
       console.error('Failed to save AI settings:', err);
-      toast.error(err.message || 'Failed to save settings');
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -111,7 +112,7 @@ export function AISettingsPanel() {
                 Gemini AI Assistant Configuration
               </CardTitle>
               <CardDescription>
-                Customize your AI assistant's model, system prompt, knowledge base, and human handover alerts.
+                Customize your AI assistant&apos;s model, system prompt, knowledge base, and human handover alerts.
               </CardDescription>
             </div>
             <div className="flex items-center gap-3">
@@ -190,7 +191,7 @@ export function AISettingsPanel() {
               className="font-mono text-xs leading-relaxed text-slate-800"
             />
             <p className="text-xs text-slate-500">
-              Define the AI's role, tone, boundaries, and instructions.
+              Define the AI&apos;s role, tone, boundaries, and instructions.
             </p>
           </div>
 

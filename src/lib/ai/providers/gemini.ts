@@ -43,9 +43,10 @@ export async function generateGemini(args: ProviderArgs): Promise<ProviderResult
     })
 
     return { text, usage }
-  } catch (err: any) {
+  } catch (err: unknown) {
     if (err instanceof AiError) throw err
-    if (err?.message?.includes('API_KEY_INVALID') || err?.status === 400) {
+    const msg = err instanceof Error ? err.message : String(err)
+    if (msg.includes('API_KEY_INVALID') || (typeof err === 'object' && err !== null && 'status' in err && err.status === 400)) {
       throw new AiError('Invalid Gemini API Key.', { code: 'invalid_key', status: 401 })
     }
     throw toNetworkError(err)

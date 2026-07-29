@@ -3,7 +3,7 @@ import { sendTextMessage } from "@/lib/whatsapp/meta-api";
 import { sendEmail } from "@/lib/email";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-let supabaseAdmin: any = null;
+let supabaseAdmin: ReturnType<typeof createClient> | null = null;
 function getSupabaseAdmin() {
   if (!supabaseAdmin) {
     supabaseAdmin = createClient(
@@ -24,7 +24,7 @@ export async function handleAIAssistant(
   conversationId: string,
   contactId: string,
   inboundText: string,
-  configOwnerUserId: string,
+  _configOwnerUserId: string,
   phoneNumberId: string,
   accessToken: string
 ) {
@@ -33,7 +33,6 @@ export async function handleAIAssistant(
     const supabase = getSupabaseAdmin();
 
     // 0. Fetch account AI settings
-    let enabled = true;
     let modelName = "gemini-3.1-flash-lite";
     let systemPrompt = `You are a helpful and professional customer support AI assistant for our business on WhatsApp. Answer customer inquiries clearly and concisely. If a customer asks to buy, requests custom pricing, or wants to talk to a human agent, include the exact phrase "HUMAN_HANDOVER_REQUIRED" in your response.`;
     let knowledgeBase = "";
@@ -82,7 +81,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
     
     // The latest message in the DB is the current inbound message.
     // We exclude it from the history as it will be passed to sendMessage.
-    const rawHistory = dbMessages.slice(1).reverse().map((msg: any) => ({
+    const rawHistory = dbMessages.slice(1).reverse().map((msg: { sender_type: string; content_text: string | null }) => ({
       role: msg.sender_type === "customer" ? "user" : "model",
       text: msg.content_text || "",
     }));
@@ -183,7 +182,8 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       }).eq("id", conversationId);
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : String(error);
     console.error("Error in AI Assistant:", error);
     try {
       let diagInfo = "";
@@ -195,11 +195,12 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
           if (diagData.error) {
             diagInfo = ` [Key Diagnostic: ${diagData.error.message || JSON.stringify(diagData.error)}]`;
           } else if (diagData.models && Array.isArray(diagData.models)) {
-            const names = diagData.models.slice(0, 5).map((m: any) => m.name.replace("models/", "")).join(", ");
+            const names = diagData.models.slice(0, 5).map((m: { name: string }) => m.name.replace("models/", "")).join(", ");
             diagInfo = ` [Supported models: ${names}]`;
           }
-        } catch (diagErr: any) {
-          diagInfo = ` [Diagnostic fetch failed: ${diagErr.message || diagErr}]`;
+        } catch (diagErr: unknown) {
+          const dMsg = diagErr instanceof Error ? diagErr.message : String(diagErr);
+          diagInfo = ` [Diagnostic fetch failed: ${dMsg}]`;
         }
       }
 
@@ -207,7 +208,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
         conversation_id: conversationId,
         sender_type: "agent",
         content_type: "text",
-        content_text: `⚠️ [AI Assistant Error]: ${error.message || error}${diagInfo}`,
+        content_text: `⚠️ [AI Assistant Error]: ${errMessage}${diagInfo}`,
         status: "failed",
         created_at: new Date().toISOString(),
       });

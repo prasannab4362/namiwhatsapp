@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-let _adminClient: any = null;
+let _adminClient: ReturnType<typeof createClient> | null = null;
 function supabaseAdmin() {
   if (!_adminClient) {
     _adminClient = createClient(
@@ -43,10 +43,11 @@ export async function POST(
     }
 
     return NextResponse.json({ success: true, bot_active });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Internal server error";
     console.error("[bot-status API] Error:", error);
     return NextResponse.json(
-      { error: error.message || "Internal server error" },
+      { error: message },
       { status: 500 }
     );
   }

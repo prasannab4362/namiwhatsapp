@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-let _adminClient: any = null;
+let _adminClient: ReturnType<typeof createClient> | null = null;
 function supabaseAdmin() {
   if (!_adminClient) {
     _adminClient = createClient(
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json(data);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[ai-settings GET] Error:", err);
     return NextResponse.json({ ...DEFAULT_SETTINGS });
   }
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
       account_id: accountId,
       enabled: enabled ?? true,
       model_name: model_name || "gemini-3.1-flash-lite",
@@ -102,10 +102,11 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, settings: data });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal server error";
     console.error("[ai-settings POST] Error:", err);
     return NextResponse.json(
-      { error: err.message || "Internal server error" },
+      { error: message },
       { status: 500 }
     );
   }
