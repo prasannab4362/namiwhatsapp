@@ -17,7 +17,6 @@ vi.mock('@/lib/webhooks/ssrf', () => ({
 }));
 
 import { dispatchWebhookEvent, MAX_CONSECUTIVE_FAILURES } from './deliver';
-import { isDeliverableUrl } from './ssrf';
 
 interface Row {
   id: string;
