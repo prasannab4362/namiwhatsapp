@@ -149,11 +149,9 @@ export function AISettingsPanel() {
               onChange={(e) => setModelName(e.target.value)}
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-medium"
             >
-              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Latest & Recommended)</option>
-              <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (Fast & Efficient)</option>
-              <option value="gemini-2.0-flash">Gemini 2.0 Flash (Multimodal)</option>
+              <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite (Recommended Default - Fast & Low Latency)</option>
+              <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
               <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-              <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Reasoning)</option>
             </select>
             <p className="text-xs text-slate-500">
               Select the Gemini model variant to power your WhatsApp assistant responses.
