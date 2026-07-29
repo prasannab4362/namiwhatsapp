@@ -22,10 +22,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "wacrm",
-    template: "%s — wacrm",
+    default: "NamiwhatsCRM",
+    template: "%s — NamiwhatsCRM",
   },
-  description: "Self-hostable CRM template for WhatsApp.",
+  description: "Official NamiwhatsCRM — Next-Gen AI-Powered WhatsApp CRM.",
   robots: {
     index: false,
     follow: false,
