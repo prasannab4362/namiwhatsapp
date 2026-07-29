@@ -6,9 +6,14 @@ vi.mock('@/lib/whatsapp/encryption', () => ({
   encrypt: (s: string) => s,
 }));
 
+// Hoist the spy so it exists before any module is imported, giving
+// clearMocks:true a stable vi.fn() to reset (rather than the factory
+// closure losing its reference on the first clear).
+const isDeliverableUrlSpy = vi.hoisted(() => vi.fn<() => Promise<boolean>>());
+
 // Control the SSRF guard per-test.
 vi.mock('@/lib/webhooks/ssrf', () => ({
-  isDeliverableUrl: vi.fn(async () => true),
+  isDeliverableUrl: isDeliverableUrlSpy,
 }));
 
 import { dispatchWebhookEvent, MAX_CONSECUTIVE_FAILURES } from './deliver';
@@ -58,7 +63,8 @@ function makeDb(rows: Row[], calls: Calls) {
 const emptyCalls = (): Calls => ({ updates: [], rpcs: [] });
 
 beforeEach(() => {
-  vi.mocked(isDeliverableUrl).mockResolvedValue(true);
+  // Default: every URL is deliverable. Individual tests override as needed.
+  isDeliverableUrlSpy.mockResolvedValue(true);
   vi.stubGlobal('fetch', vi.fn());
 });
 afterEach(() => vi.unstubAllGlobals());
@@ -107,7 +113,7 @@ describe('dispatchWebhookEvent', () => {
   });
 
   it('blocks a non-public target (SSRF guard) without fetching', async () => {
-    vi.mocked(isDeliverableUrl).mockResolvedValue(false);
+    isDeliverableUrlSpy.mockResolvedValue(false);
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const calls = emptyCalls();

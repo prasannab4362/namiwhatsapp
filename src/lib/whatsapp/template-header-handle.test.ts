@@ -5,10 +5,13 @@ vi.mock('./meta-api', () => ({
   uploadResumableMedia: vi.fn(async () => ({ handle: 'HANDLE123' })),
 }));
 
+// Hoist the spy so clearMocks:true doesn't wipe the module-mock reference.
+const isDeliverableUrlSpy = vi.hoisted(() => vi.fn<() => Promise<boolean>>());
+
 // The SSRF guard does a real DNS lookup, so stub it — the fixtures below use
 // a `.test` hostname that would never resolve. Each test sets the verdict.
 vi.mock('@/lib/webhooks/ssrf', () => ({
-  isDeliverableUrl: vi.fn(async () => true),
+  isDeliverableUrl: isDeliverableUrlSpy,
 }));
 
 import { ensureImageHeaderHandle } from './template-header-handle';
@@ -40,13 +43,14 @@ function imgResponse(type = 'image/jpeg', size = 1024, ok = true, status = 200):
 describe('ensureImageHeaderHandle', () => {
   beforeEach(() => {
     vi.mocked(uploadResumableMedia).mockClear();
-    vi.mocked(isDeliverableUrl).mockClear();
-    vi.mocked(isDeliverableUrl).mockResolvedValue(true);
+    // Default verdict: URL is reachable. Tests that need false override below.
+    isDeliverableUrlSpy.mockResolvedValue(true);
   });
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });
+
 
   it('is a no-op for non-image headers', async () => {
     const p = payload({ header_type: 'text', header_content: 'Hi' });
@@ -95,7 +99,7 @@ describe('ensureImageHeaderHandle', () => {
   // loopback, RFC1918 and cloud-metadata addresses.
   it('refuses a non-public header URL without fetching it', async () => {
     vi.stubEnv('META_APP_ID', 'app-1');
-    vi.mocked(isDeliverableUrl).mockResolvedValue(false);
+    isDeliverableUrlSpy.mockResolvedValue(false);
     const fetchSpy = vi.fn(async () => imgResponse('application/json'));
     vi.stubGlobal('fetch', fetchSpy);
 
@@ -111,13 +115,13 @@ describe('ensureImageHeaderHandle', () => {
   it('reports a blocked URL exactly like an unreachable one', async () => {
     vi.stubEnv('META_APP_ID', 'app-1');
 
-    vi.mocked(isDeliverableUrl).mockResolvedValue(false);
+    isDeliverableUrlSpy.mockResolvedValue(false);
     vi.stubGlobal('fetch', vi.fn(async () => imgResponse()));
     const blocked = await ensureImageHeaderHandle(payload(), 'tok').catch(
       (e: Error) => e.message,
     );
 
-    vi.mocked(isDeliverableUrl).mockResolvedValue(true);
+    isDeliverableUrlSpy.mockResolvedValue(true);
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => {

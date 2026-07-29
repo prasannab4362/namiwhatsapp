@@ -26,6 +26,7 @@ const ROW = {
   is_active: false,
   auto_reply_enabled: false,
   auto_reply_max_per_conversation: 3,
+  handoff_agent_id: null,
   embeddings_api_key: null,
 }
 
