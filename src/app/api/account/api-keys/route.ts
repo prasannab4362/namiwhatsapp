@@ -57,7 +57,7 @@ export async function GET() {
     if (error) {
       console.error('[GET /api/account/api-keys] fetch error:', error);
       return NextResponse.json(
-        { error: 'Failed to load API keys' },
+        { error: `Database error: ${error.message}` },
         { status: 500 }
       );
     }
