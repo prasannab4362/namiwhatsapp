@@ -16,6 +16,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
+import { SettingsPanelHead } from "./settings-panel-head";
 
 /**
  * Deals settings — account-wide default currency.
@@ -38,6 +40,7 @@ export function DealsSettings() {
 
   const [selected, setSelected] = useState(defaultCurrency);
   const [saving, setSaving] = useState(false);
+  const t = useTranslations("Settings.deals");
 
   // Keep the select in sync once the profile (and its account default)
   // resolves, and after a save round-trips through refreshProfile.
@@ -55,7 +58,7 @@ export function DealsSettings() {
       .update({ default_currency: selected })
       .eq("id", accountId);
     if (error) {
-      toast.error("Failed to save default currency");
+      toast.error(t("saveFailed"));
       setSaving(false);
       return;
     }
@@ -63,31 +66,33 @@ export function DealsSettings() {
     // and every total pick it up without a full reload.
     await refreshProfile();
     setSaving(false);
-    toast.success("Default currency updated");
+    toast.success(t("saveSuccess"));
   }
 
   return (
-    <section className="mt-4 space-y-4">
-      <Card className="bg-white border-slate-300 ring-0 ring-transparent">
+    <section className="max-w-2xl animate-in fade-in-50 duration-200">
+      <SettingsPanelHead
+        title={t("title")}
+        description={t("description")}
+      />
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-slate-900">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Coins className="size-4 text-primary" />
-            Default currency
+            {t("defaultCurrency")}
           </CardTitle>
-          <CardDescription className="text-slate-600">
-            New deals default to this currency, and pipeline and
-            dashboard totals are shown in it. Existing deals keep the
-            currency they were saved with.
+          <CardDescription className="text-muted-foreground">
+            {t("defaultCurrencyDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2 sm:max-w-xs">
-            <Label className="text-slate-700">Currency</Label>
+            <Label className="text-muted-foreground">{t("currencyLabel")}</Label>
             <select
               value={selected}
               onChange={(e) => setSelected(e.target.value)}
               disabled={!canEditSettings || profileLoading}
-              className="h-9 w-full rounded-lg border border-slate-300 bg-slate-100 px-2.5 text-sm text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-9 w-full rounded-lg border border-border bg-muted px-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
               {CURRENCIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -96,8 +101,8 @@ export function DealsSettings() {
               ))}
             </select>
             {!canEditSettings && (
-              <p className="text-xs text-slate-500">
-                Only account admins can change the default currency.
+              <p className="text-xs text-muted-foreground">
+                {t("adminOnlyHint")}
               </p>
             )}
           </div>
@@ -111,10 +116,10 @@ export function DealsSettings() {
               {saving ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />
-                  Saving...
+                  {t("saving")}
                 </>
               ) : (
-                "Save"
+                t("save")
               )}
             </Button>
           )}

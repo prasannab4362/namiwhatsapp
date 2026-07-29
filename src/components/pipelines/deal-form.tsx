@@ -32,6 +32,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface DealFormProps {
   open: boolean;
@@ -52,6 +53,7 @@ export function DealForm({
   defaultStageId,
   onSaved,
 }: DealFormProps) {
+  const t = useTranslations("Pipelines.form");
   const supabase = createClient();
   const { accountId, defaultCurrency } = useAuth();
 
@@ -151,7 +153,7 @@ export function DealForm({
 
   async function handleSave() {
     if (!title.trim() || !contactId || !stageId) {
-      toast.error("Title, contact, and stage are required");
+      toast.error(t("toastRequired"));
       return;
     }
     setSaving(true);
@@ -174,7 +176,7 @@ export function DealForm({
         .update(payload)
         .eq("id", deal.id);
       if (error) {
-        toast.error("Failed to save deal");
+        toast.error(t("toastFailedSave"));
         setSaving(false);
         return;
       }
@@ -184,12 +186,12 @@ export function DealForm({
       } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user) {
-        toast.error("Not signed in");
+        toast.error(t("toastNotSignedIn"));
         setSaving(false);
         return;
       }
       if (!accountId) {
-        toast.error("Your profile is not linked to an account.");
+        toast.error(t("toastNotLinked"));
         setSaving(false);
         return;
       }
@@ -197,14 +199,14 @@ export function DealForm({
         .from("deals")
         .insert({ ...payload, user_id: user.id, account_id: accountId, status: "open" });
       if (error) {
-        toast.error("Failed to create deal");
+        toast.error(t("toastFailedCreate"));
         setSaving(false);
         return;
       }
     }
 
     setSaving(false);
-    toast.success(deal ? "Deal updated" : "Deal created");
+    toast.success(deal ? t("toastUpdated") : t("toastCreated"));
     onOpenChange(false);
     onSaved();
   }
@@ -218,11 +220,11 @@ export function DealForm({
       .eq("id", deal.id);
     setStatusAction(null);
     if (error) {
-      toast.error("Failed to update deal status");
+      toast.error(t("toastFailedStatus"));
       return;
     }
     toast.success(
-      status === "won" ? "Marked as won" : status === "lost" ? "Marked as lost" : "Deal reopened",
+      status === "won" ? t("toastMarkedWon") : status === "lost" ? t("toastMarkedLost") : t("toastReopened"),
     );
     onOpenChange(false);
     onSaved();
@@ -234,10 +236,10 @@ export function DealForm({
     const { error } = await supabase.from("deals").delete().eq("id", deal.id);
     setDeleting(false);
     if (error) {
-      toast.error("Failed to delete deal");
+      toast.error(t("toastFailedDelete"));
       return;
     }
-    toast.success("Deal deleted");
+    toast.success(t("toastDeleted"));
     setConfirmDelete(false);
     onOpenChange(false);
     onSaved();
@@ -247,34 +249,34 @@ export function DealForm({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="bg-white border-slate-300 text-slate-800 sm:max-w-lg w-full p-0"
+        className="bg-popover border-border text-popover-foreground sm:max-w-lg w-full p-0"
       >
         <div className="flex h-full flex-col">
-          <SheetHeader className="border-b border-slate-700/50 p-4">
-            <SheetTitle className="text-slate-900">
-              {deal ? "Edit Deal" : "New Deal"}
+          <SheetHeader className="border-b border-border/50 p-4">
+            <SheetTitle className="text-popover-foreground">
+              {deal ? t("editDeal") : t("newDeal")}
             </SheetTitle>
           </SheetHeader>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             <div className="grid gap-2">
-              <Label className="text-slate-700">Title</Label>
+              <Label className="text-muted-foreground">{t("title")}</Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Deal title"
-                className="border-slate-300 bg-slate-100 text-slate-900"
+                placeholder={t("titlePlaceholder")}
+                className="border-border bg-muted text-foreground"
               />
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-slate-700">Contact</Label>
+              <Label className="text-muted-foreground">{t("contact")}</Label>
               <select
                 value={contactId}
                 onChange={(e) => setContactId(e.target.value)}
-                className="h-9 w-full rounded-lg border border-slate-300 bg-slate-100 px-2.5 text-sm text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                className="h-9 w-full rounded-lg border border-border bg-muted px-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               >
-                <option value="">Select a contact</option>
+                <option value="">{t("selectContact")}</option>
                 {contacts.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name || c.phone}
@@ -288,31 +290,31 @@ export function DealForm({
                   className="mt-1 inline-flex items-center gap-1.5 self-start rounded-md bg-primary/10 px-2 py-1 text-xs text-primary hover:bg-primary/20"
                 >
                   <MessageSquare className="h-3 w-3" />
-                  Link to Conversation
+                  {t("linkToConversation")}
                 </Link>
               )}
             </div>
 
             <div className="grid grid-cols-[1fr_110px] gap-3">
               <div className="grid gap-2">
-                <Label className="text-slate-700">Value</Label>
+                <Label className="text-muted-foreground">{t("value")}</Label>
                 <div className="relative">
-                  <DollarSign className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+                  <DollarSign className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="number"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="0"
-                    className="border-slate-300 bg-slate-100 pl-7 text-slate-900"
+                    className="border-border bg-muted pl-7 text-foreground"
                   />
                 </div>
               </div>
               <div className="grid gap-2">
-                <Label className="text-slate-700">Currency</Label>
+                <Label className="text-muted-foreground">{t("currency")}</Label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="h-9 w-full rounded-lg border border-slate-300 bg-slate-100 px-2.5 text-sm text-slate-900 outline-none focus:border-primary"
+                  className="h-9 w-full rounded-lg border border-border bg-muted px-2.5 text-sm text-foreground outline-none focus:border-primary"
                 >
                   {CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -324,21 +326,21 @@ export function DealForm({
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-slate-700">Expected Close Date</Label>
+              <Label className="text-muted-foreground">{t("expectedCloseDate")}</Label>
               <Input
                 type="date"
                 value={expectedCloseDate}
                 onChange={(e) => setExpectedCloseDate(e.target.value)}
-                className="border-slate-300 bg-slate-100 text-slate-900"
+                className="border-border bg-muted text-foreground"
               />
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-slate-700">Stage</Label>
+              <Label className="text-muted-foreground">{t("stage")}</Label>
               <select
                 value={stageId}
                 onChange={(e) => setStageId(e.target.value)}
-                className="h-9 w-full rounded-lg border border-slate-300 bg-slate-100 px-2.5 text-sm text-slate-900 outline-none focus:border-primary"
+                className="h-9 w-full rounded-lg border border-border bg-muted px-2.5 text-sm text-foreground outline-none focus:border-primary"
               >
                 {stages.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -349,13 +351,13 @@ export function DealForm({
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-slate-700">Assigned To</Label>
+              <Label className="text-muted-foreground">{t("assignedTo")}</Label>
               <select
                 value={assignedTo}
                 onChange={(e) => setAssignedTo(e.target.value)}
-                className="h-9 w-full rounded-lg border border-slate-300 bg-slate-100 px-2.5 text-sm text-slate-900 outline-none focus:border-primary"
+                className="h-9 w-full rounded-lg border border-border bg-muted px-2.5 text-sm text-foreground outline-none focus:border-primary"
               >
-                <option value="">Unassigned</option>
+                <option value="">{t("unassigned")}</option>
                 {profiles.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.full_name || p.email}
@@ -365,19 +367,19 @@ export function DealForm({
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-slate-700">Notes</Label>
+              <Label className="text-muted-foreground">{t("notes")}</Label>
               <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add notes..."
-                className="min-h-[100px] border-slate-300 bg-slate-100 text-slate-900"
+                placeholder={t("notesPlaceholder")}
+                className="min-h-[100px] border-border bg-muted text-foreground"
               />
             </div>
 
             {deal && (
-              <div className="space-y-2 rounded-lg border border-slate-300 bg-slate-900/50 p-3">
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-600">
-                  Status
+              <div className="space-y-2 rounded-lg border border-border bg-muted/50 p-3">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {t("status")}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -391,7 +393,7 @@ export function DealForm({
                     ) : (
                       <>
                         <Check className="mr-1 h-4 w-4" />
-                        Mark as Won
+                        {t("markAsWon")}
                       </>
                     )}
                   </Button>
@@ -399,14 +401,14 @@ export function DealForm({
                     type="button"
                     onClick={() => handleStatusChange("lost")}
                     disabled={!!statusAction || deal.status === "lost"}
-                    className="flex-1 bg-red-600 text-slate-900 hover:bg-red-700 disabled:opacity-50"
+                    className="flex-1 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
                   >
                     {statusAction === "lost" ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <>
                         <X className="mr-1 h-4 w-4" />
-                        Mark as Lost
+                        {t("markAsLost")}
                       </>
                     )}
                   </Button>
@@ -417,53 +419,53 @@ export function DealForm({
                     variant="ghost"
                     onClick={() => handleStatusChange("open")}
                     disabled={!!statusAction}
-                    className="w-full text-slate-600 hover:text-slate-900"
+                    className="w-full text-muted-foreground hover:text-foreground"
                   >
-                    Reopen deal
+                    {t("reopenDeal")}
                   </Button>
                 )}
               </div>
             )}
           </div>
 
-          <div className="border-t border-slate-700/50 bg-white/80 p-4">
+          <div className="border-t border-border/50 bg-popover/80 p-4">
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="flex-1 border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100"
+                className="flex-1 border-border bg-transparent text-muted-foreground hover:bg-muted"
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={saving || !title.trim() || !contactId || !stageId}
                 className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                {saving ? "Saving..." : deal ? "Save Changes" : "Create Deal"}
+                {saving ? t("saving") : deal ? t("saveChanges") : t("createDeal")}
               </Button>
             </div>
 
             {deal &&
               (confirmDelete ? (
                 <div className="mt-3 flex items-center justify-between gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs">
-                  <span className="text-red-300">Delete this deal?</span>
+                  <span className="text-red-300">{t("deletePrompt")}</span>
                   <div className="flex gap-1">
                     <button
                       type="button"
                       onClick={() => setConfirmDelete(false)}
                       disabled={deleting}
-                      className="rounded px-2 py-1 text-slate-700 hover:bg-slate-100"
+                      className="rounded px-2 py-1 text-muted-foreground hover:bg-muted"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       type="button"
                       onClick={handleDelete}
                       disabled={deleting}
-                      className="rounded bg-red-600 px-2 py-1 font-medium text-slate-900 hover:bg-red-700 disabled:opacity-50"
+                      className="rounded bg-red-600 px-2 py-1 font-medium text-white hover:bg-red-700 disabled:opacity-50"
                     >
-                      {deleting ? "Deleting..." : "Confirm"}
+                      {deleting ? t("deleting") : t("confirm")}
                     </button>
                   </div>
                 </div>
@@ -474,7 +476,7 @@ export function DealForm({
                   className="mt-3 flex w-full items-center justify-center gap-1 text-xs text-red-400 hover:text-red-300"
                 >
                   <Trash2 className="h-3 w-3" />
-                  Delete Deal
+                  {t("deleteDeal")}
                 </button>
               ))}
           </div>

@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { NODE_META, type BuilderNode } from "../shared";
 
 export function TextRow({
@@ -43,19 +44,19 @@ export function TextRow({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-xs text-slate-600">{label}</label>
+      <label className="mb-1 block text-xs text-muted-foreground">{label}</label>
       {rows > 1 ? (
         <Textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           rows={rows}
-          className="bg-slate-100"
+          className="bg-muted"
         />
       ) : (
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="bg-slate-100"
+          className="bg-muted"
         />
       )}
     </div>
@@ -77,13 +78,13 @@ export function NextNodeRow({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-xs text-slate-600">{label}</label>
+      <label className="mb-1 block text-xs text-muted-foreground">{label}</label>
       <NodeKeySelect
         value={value || null}
         nodes={allNodes}
         excludeKey={currentKey}
         onChange={(v) => onChange(v ?? "")}
-        placeholder="Pick a next node…"
+        placeholder={useTranslations("Flows.builder.form")("pickNextNode")}
       />
     </div>
   );
@@ -104,17 +105,18 @@ export function NodeKeySelect({
   placeholder?: string;
   className?: string;
 }) {
+  const t = useTranslations("Flows.builder.form");
   const options = nodes.filter((n) => n.node_key !== excludeKey);
   return (
     <Select
       value={value ?? "__none__"}
       onValueChange={(v) => onChange(v === "__none__" ? null : v)}
     >
-      <SelectTrigger className={cn("bg-slate-100", className)}>
+      <SelectTrigger className={cn("bg-muted", className)}>
         <SelectValue placeholder={placeholder ?? "—"} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="__none__">— None —</SelectItem>
+        <SelectItem value="__none__">{t("none")}</SelectItem>
         {options.map((n) => {
           const Icon = NODE_META[n.node_type].icon;
           return (

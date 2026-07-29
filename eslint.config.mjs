@@ -12,7 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    "replace-theme.js",
+    // Vendored minified opus-recorder encoder worker (served statically).
+    "public/opus/**",
   ]),
 ]);
 

@@ -13,13 +13,16 @@ interface PipelineDonutProps {
   currency: string
 }
 
+import { useTranslations } from 'next-intl'
+
 export function PipelineDonut({ data, loading, currency }: PipelineDonutProps) {
+  const t = useTranslations('Dashboard.pipelineDonut')
   return (
-    <section className="flex h-full flex-col rounded-xl border border-slate-200 bg-white">
-      <header className="border-b border-slate-200 px-5 py-4">
-        <h2 className="text-sm font-semibold text-slate-900">Pipeline Value</h2>
-        <p className="mt-0.5 text-xs text-slate-500">
-          Open deals by stage
+    <section className="flex h-full flex-col rounded-xl border border-border bg-card">
+      <header className="border-b border-border px-5 py-4">
+        <h2 className="text-sm font-semibold text-foreground">{t('title')}</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {t('description')}
         </p>
       </header>
 
@@ -29,8 +32,8 @@ export function PipelineDonut({ data, loading, currency }: PipelineDonutProps) {
         ) : data.stages.length === 0 ? (
           <EmptyState
             icon={GitBranch}
-            title="No open deals yet"
-            hint="Create deals in Pipelines to see stage breakdowns here."
+            title={t('noOpenDeals')}
+            hint={t('noOpenDealsHint')}
           />
         ) : (
           <>
@@ -43,11 +46,11 @@ export function PipelineDonut({ data, loading, currency }: PipelineDonutProps) {
                     style={{ background: s.color }}
                     aria-hidden
                   />
-                  <span className="flex-1 truncate text-slate-700">{s.name}</span>
-                  <span className="text-slate-500 tabular-nums">
-                    {s.dealCount} deal{s.dealCount === 1 ? '' : 's'}
+                  <span className="flex-1 truncate text-muted-foreground">{s.name}</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {t('dealCount', { count: s.dealCount })}
                   </span>
-                  <span className="w-20 text-right text-slate-700 tabular-nums">
+                  <span className="w-20 text-right text-muted-foreground tabular-nums">
                     {formatCurrencyShort(s.totalValue, currency)}
                   </span>
                 </li>
@@ -67,6 +70,7 @@ export function PipelineDonut({ data, loading, currency }: PipelineDonutProps) {
 // them for a cleaner look.
 // ------------------------------------------------------------
 function Donut({ data, currency }: { data: PipelineDonutData; currency: string }) {
+  const t = useTranslations('Dashboard.pipelineDonut')
   const size = 200
   const r = 80
   const ringWidth = 18
@@ -96,9 +100,9 @@ function Donut({ data, currency }: { data: PipelineDonutData; currency: string }
 
   return (
     <div className="flex items-center justify-center">
-      <svg viewBox={`0 0 ${size} ${size}`} className="h-48 w-48" role="img" aria-label="Pipeline value by stage">
+      <svg viewBox={`0 0 ${size} ${size}`} className="h-48 w-48" role="img" aria-label={t('ariaLabel')}>
         {/* background ring */}
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgb(30 41 59)" strokeWidth={ringWidth} />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--muted)" strokeWidth={ringWidth} />
         {segments.map((seg) => (
           <path
             key={seg.id}
@@ -114,15 +118,15 @@ function Donut({ data, currency }: { data: PipelineDonutData; currency: string }
           x={cx}
           y={cy - 6}
           textAnchor="middle"
-          className="fill-slate-500 text-[11px]"
+          className="fill-muted-foreground text-[11px]"
         >
-          Total
+          {t('total')}
         </text>
         <text
           x={cx}
           y={cy + 14}
           textAnchor="middle"
-          className="fill-white text-[18px] font-semibold tabular-nums"
+          className="fill-foreground text-[18px] font-semibold tabular-nums"
         >
           {formatCurrencyShort(data.totalValue, currency)}
         </text>
