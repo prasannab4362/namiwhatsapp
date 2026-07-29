@@ -9,7 +9,13 @@ function supabaseAdmin() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
   }
-  return _adminClient;
+  return _adminClient as unknown as {
+    from: (table: string) => {
+      update: (patch: { bot_active: boolean }) => {
+        eq: (col: string, val: string) => Promise<{ error: { message: string } | null }>;
+      };
+    };
+  };
 }
 
 export async function POST(

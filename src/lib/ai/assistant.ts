@@ -3,6 +3,60 @@ import { sendTextMessage } from "@/lib/whatsapp/meta-api";
 import { sendEmail } from "@/lib/email";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// ── Typed row shapes for tables that are not in the generated DB schema ──────
+interface AiSettingsRow {
+  enabled: boolean;
+  api_key?: string | null;
+  model_name?: string | null;
+  system_prompt?: string | null;
+  knowledge_base?: string | null;
+  notification_email?: string | null;
+}
+
+interface MessageRow {
+  sender_type: string;
+  content_text: string | null;
+  created_at: string;
+}
+
+interface ContactRow {
+  name?: string | null;
+  phone: string;
+}
+
+interface MessageInsert {
+  conversation_id: string;
+  sender_type: string;
+  content_type: string;
+  content_text: string;
+  message_id?: string;
+  status: string;
+  created_at: string;
+}
+
+interface ConversationUpdate {
+  last_message_text?: string;
+  last_message_at?: string;
+  bot_active?: boolean;
+}
+
+// Helper: cast the untyped admin client so we can call typed helpers
+// without TS complaining that every table is `never`.
+type UntypedClient = {
+  from: (table: string) => UntypedBuilder;
+};
+type UntypedBuilder = PromiseLike<{ data: unknown; error: { message: string } | null }> & {
+  select: (cols?: string) => UntypedBuilder;
+  insert: (row: MessageInsert) => Promise<{ error: { message: string } | null }>;
+  upsert: (row: unknown, opts?: { onConflict?: string }) => UntypedBuilder;
+  update: (patch: ConversationUpdate) => UntypedBuilder;
+  eq: (col: string, val: string | boolean) => UntypedBuilder;
+  order: (col: string, opts?: { ascending: boolean }) => UntypedBuilder;
+  limit: (n: number) => UntypedBuilder;
+  maybeSingle: () => Promise<{ data: unknown; error: { message: string } | null }>;
+  single: () => Promise<{ data: unknown; error: { message: string } | null }>;
+};
+
 let supabaseAdmin: ReturnType<typeof createClient> | null = null;
 function getSupabaseAdmin() {
   if (!supabaseAdmin) {
@@ -30,7 +84,7 @@ export async function handleAIAssistant(
 ) {
   let customApiKey = "";
   try {
-    const supabase = getSupabaseAdmin();
+    const supabase = getSupabaseAdmin() as unknown as UntypedClient;
 
     // 0. Fetch account AI settings
     let modelName = "gemini-3.1-flash-lite";
@@ -38,24 +92,25 @@ export async function handleAIAssistant(
     let knowledgeBase = "";
     let notificationEmail = process.env.NOTIFICATION_EMAIL || "";
 
-    const { data: aiSettings } = await supabase
+    const { data: aiSettingsRaw } = await supabase
       .from("ai_settings")
       .select("*")
       .eq("account_id", accountId)
       .maybeSingle();
+    const aiSettings = aiSettingsRaw as AiSettingsRow | null;
 
     if (aiSettings) {
       if (aiSettings.enabled === false) {
         console.log("[AI Assistant] AI is globally disabled for this account.");
         return;
       }
-      if (aiSettings.api_key) customApiKey = aiSettings.api_key;
+      if (aiSettings.api_key) customApiKey = aiSettings.api_key as string;
       if (aiSettings.model_name) {
-        modelName = aiSettings.model_name;
+        modelName = aiSettings.model_name as string;
       }
-      if (aiSettings.system_prompt) systemPrompt = aiSettings.system_prompt;
-      if (aiSettings.knowledge_base) knowledgeBase = aiSettings.knowledge_base;
-      if (aiSettings.notification_email) notificationEmail = aiSettings.notification_email;
+      if (aiSettings.system_prompt) systemPrompt = aiSettings.system_prompt as string;
+      if (aiSettings.knowledge_base) knowledgeBase = aiSettings.knowledge_base as string;
+      if (aiSettings.notification_email) notificationEmail = aiSettings.notification_email as string;
     }
 
     const apiKey = customApiKey || process.env.GEMINI_API_KEY;
@@ -77,7 +132,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       .limit(10);
 
     // Build alternating chat history for Gemini
-    const dbMessages = messages || [];
+    const dbMessages = (messages as MessageRow[] | null) || [];
     
     // The latest message in the DB is the current inbound message.
     // We exclude it from the history as it will be passed to sendMessage.
@@ -136,7 +191,8 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
       
       // Send an email notification about the hot lead
       const contact = await supabase.from('contacts').select('name, phone').eq('id', contactId).single();
-      const contactInfo = contact.data ? `${contact.data.name} (${contact.data.phone})` : contactId;
+      const contactData = contact.data as ContactRow | null;
+      const contactInfo = contactData ? `${contactData.name} (${contactData.phone})` : contactId;
 
       if (notificationEmail) {
         await sendEmail({
@@ -154,13 +210,14 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
 
     if (responseText) {
       // 2. Send the AI response via WhatsApp
-      const targetContact = await supabase.from('contacts').select('phone').eq('id', contactId).single();
-      if (!targetContact.data) return;
+      const targetContactResult = await supabase.from('contacts').select('phone').eq('id', contactId).single();
+      const targetContact = targetContactResult.data as ContactRow | null;
+      if (!targetContact) return;
 
       const metaSendResult = await sendTextMessage({
         phoneNumberId,
         accessToken,
-        to: targetContact.data.phone,
+        to: targetContact.phone,
         text: responseText,
       });
 
@@ -204,7 +261,7 @@ CRITICAL RULE: If you feel the lead is getting hot, asking to purchase, or requi
         }
       }
 
-      await getSupabaseAdmin().from("messages").insert({
+      (getSupabaseAdmin() as unknown as UntypedClient).from("messages").insert({
         conversation_id: conversationId,
         sender_type: "agent",
         content_type: "text",

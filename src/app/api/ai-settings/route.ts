@@ -9,7 +9,21 @@ function supabaseAdmin() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
   }
-  return _adminClient;
+  return _adminClient as unknown as {
+    from: (table: string) => {
+      select: (cols?: string) => {
+        eq: (col: string, val: string) => {
+          maybeSingle: () => Promise<{ data: unknown; error: { message: string } | null }>;
+          single: () => Promise<{ data: unknown; error: { message: string } | null }>;
+        };
+      };
+      upsert: (row: unknown, opts?: { onConflict?: string }) => {
+        select: (cols?: string) => {
+          single: () => Promise<{ data: unknown; error: { message: string } | null }>;
+        };
+      };
+    };
+  };
 }
 
 const DEFAULT_SETTINGS = {
