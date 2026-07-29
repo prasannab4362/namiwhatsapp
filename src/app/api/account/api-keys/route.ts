@@ -70,7 +70,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const ctx = await requireRole('admin');
+    const ctx = await requireRole('agent');
 
     const limit = checkRateLimit(
       `admin:apiKeyCreate:${ctx.userId}`,
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
     if (error || !data) {
       console.error('[POST /api/account/api-keys] insert error:', error);
       return NextResponse.json(
-        { error: 'Failed to create API key' },
+        { error: error ? `Database error: ${error.message}` : 'Failed to create API key' },
         { status: 500 }
       );
     }
