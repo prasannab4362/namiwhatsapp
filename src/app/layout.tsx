@@ -31,7 +31,8 @@ export const metadata: Metadata = {
     follow: false,
   },
   icons: {
-    icon: [{ url: "/icon" }],
+    icon: [{ url: "/logo.png" }, { url: "/icon.png" }],
+    apple: [{ url: "/logo.png" }],
   },
   formatDetection: {
     email: false,
