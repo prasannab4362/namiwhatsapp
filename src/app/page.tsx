@@ -67,8 +67,8 @@ export default function RootPage() {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-3"
         >
-          <img src="/logo.png" alt="Nami CRM Logo" className="h-10 w-10 rounded-xl object-cover shadow-sm" />
-          <span className="text-2xl font-black tracking-tight text-slate-900">Nami CRM</span>
+          <img src="/logo.png" alt="NamiwhatsCRM Logo" className="h-10 w-10 rounded-xl object-cover shadow-sm" />
+          <span className="text-2xl font-black tracking-tight text-slate-900">NamiwhatsCRM</span>
         </motion.div>
         <motion.nav 
           initial={{ opacity: 0, x: 20 }}
@@ -103,7 +103,7 @@ export default function RootPage() {
             Turn your WhatsApp into a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">Sales Machine.</span>
           </h1>
           <p className="text-lg lg:text-2xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Nami CRM gives you the superpower to automate replies, manage a shared team inbox, and track deals seamlessly—all from one beautiful dashboard.
+            NamiwhatsCRM gives you the superpower to automate replies, manage a shared team inbox, and track deals seamlessly—all from one beautiful dashboard.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/dashboard" className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-primary px-10 py-4 text-lg font-bold text-slate-900 shadow-xl shadow-primary/30 hover:bg-primary-hover hover:-translate-y-1 transition-all">
@@ -219,7 +219,7 @@ export default function RootPage() {
         >
           <h2 className="text-4xl lg:text-6xl font-extrabold mb-8">Ready to revolutionize your workflow?</h2>
           <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
-            Join modern teams using Nami CRM to automate their WhatsApp communications and drive exponential growth.
+            Join modern teams using NamiwhatsCRM to automate their WhatsApp communications and drive exponential growth.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-lg font-bold text-primary shadow-lg hover:scale-105 active:scale-95 transition-all">
             Get Started for Free <ArrowRight className="h-5 w-5" />
@@ -239,7 +239,7 @@ export default function RootPage() {
           >
             <h2 className="text-3xl font-extrabold text-slate-900 mb-4">About the Author</h2>
             <p className="text-lg text-slate-600 mb-8 max-w-2xl">
-              Hi, I&apos;m Prasanna B, the creator of Nami CRM. I build intelligent AI products and innovative web solutions. Connect with me or check out my portfolio!
+              Hi, I&apos;m Prasanna B, the creator of NamiwhatsCRM. I build intelligent AI products and innovative web solutions. Connect with me or check out my portfolio!
             </p>
             
             {/* LinkedIn Badge */}
@@ -261,8 +261,8 @@ export default function RootPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <img src="/logo.png" alt="Nami CRM Logo" className="h-8 w-8 rounded-lg object-cover" />
-              <span className="text-xl font-bold text-slate-900">Nami CRM</span>
+              <img src="/logo.png" alt="NamiwhatsCRM Logo" className="h-8 w-8 rounded-lg object-cover" />
+              <span className="text-xl font-bold text-slate-900">NamiwhatsCRM</span>
             </div>
             <p className="text-slate-500 max-w-sm">
               The premium, self-hostable CRM template for the WhatsApp Business API.
@@ -287,7 +287,7 @@ export default function RootPage() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto text-center border-t border-slate-100 pt-8 text-sm text-slate-600">
-          © {new Date().getFullYear()} Nami CRM. All rights reserved.
+          © {new Date().getFullYear()} NamiwhatsCRM. All rights reserved.
         </div>
       </footer>
     </div>
