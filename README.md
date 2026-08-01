@@ -1,6 +1,6 @@
-# wacrm — CRM Template for WhatsApp
+# NamiwhatsCRM — Next-Gen AI-Powered WhatsApp CRM
 
-> Self-hostable CRM template for WhatsApp® — shared inbox, contacts,
+> Self-hostable CRM for WhatsApp® — shared inbox, contacts,
 > sales pipelines, broadcasts, and no-code automations. Fork it, brand
 > it, host it.
 
@@ -11,15 +11,12 @@
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-violet.svg)](./LICENSE)
-[![CI](https://github.com/ArnasDon/wacrm/actions/workflows/ci.yml/badge.svg)](https://github.com/ArnasDon/wacrm/actions/workflows/ci.yml)
+[![CI](https://github.com/prasannab4362/namiwhatsapp/actions/workflows/ci.yml/badge.svg)](https://github.com/prasannab4362/namiwhatsapp/actions/workflows/ci.yml)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)](https://nextjs.org)
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3ecf8e?logo=supabase)](https://supabase.com)
-[![Stars](https://img.shields.io/github/stars/ArnasDon/wacrm?style=social)](https://github.com/ArnasDon/wacrm/stargazers)
+[![Stars](https://img.shields.io/github/stars/prasannab4362/namiwhatsapp?style=social)](https://github.com/prasannab4362/namiwhatsapp/stargazers)
 
-The marketing site and self-host docs live in a separate repo:
-[ArnasDon/wacrm-site](https://github.com/ArnasDon/wacrm-site)
-([wacrm.tech](https://wacrm.tech)). This repo is the product —
-clone or fork it to run your own CRM.
+NamiwhatsCRM gives you the superpower to automate replies, manage a shared team inbox, and track deals seamlessly—all from one clean dashboard.
 
 ## What you get out of the box
 
@@ -33,7 +30,7 @@ clone or fork it to run your own CRM.
 - **No-code automations** — triggers on inbound messages, new
   contacts, keywords, or schedule; conditional branches, waits,
   tags, webhooks. Visual builder.
-- **AI reply assistant** — bring your own OpenAI or Anthropic key
+- **AI reply assistant** — bring your own OpenAI, Anthropic, or Google Gemini key
   (stored encrypted; no per-seat AI fee, your data stays yours).
   One-click AI-drafted replies in the inbox, plus an optional
   auto-reply bot with a per-conversation cap and clean human handoff.
@@ -79,9 +76,9 @@ in an afternoon and make yours.
 ## Quick start
 
 ```bash
-# Fork on GitHub first: https://github.com/ArnasDon/wacrm → Fork
-git clone https://github.com/<your-username>/wacrm.git
-cd wacrm
+# Fork or clone repository
+git clone https://github.com/prasannab4362/namiwhatsapp.git
+cd namiwhatsapp
 npm install
 cp .env.local.example .env.local   # fill in Supabase + Meta creds
 npm run dev
@@ -97,13 +94,8 @@ Open <http://localhost:3000>. You'll be redirected to `/login` (or
     <img src="./.github/assets/hostinger-deploy.png" alt="Ship your Node.js app in one click — Deploy to Hostinger" width="1000">
   </a>
 </p>
-<p align="center">
-  <a href="https://wacrm.tech/docs/deployment-hostinger">
-    <img src="https://img.shields.io/badge/Step--by--step_guide-wacrm.tech%2Fdocs-111?style=for-the-badge" alt="Step-by-step guide" height="44">
-  </a>
-</p>
 
-**wacrm is built to run on [Hostinger](https://www.hostinger.com/web-apps-hosting).**
+**NamiwhatsCRM is built to run on [Hostinger](https://www.hostinger.com/web-apps-hosting).**
 It's the path we test, document, and recommend — and the fastest way
 to get a production-grade CRM live without owning a VPS or a
 Kubernetes cluster.
@@ -123,34 +115,29 @@ Kubernetes cluster.
 
 ### The 60-second version
 
-1. **Fork** this repo on GitHub.
+1. **Fork** this repo on GitHub (`prasannab4362/namiwhatsapp`).
 2. In **hPanel → Websites → Create**, pick **Node.js** and connect
    your fork.
 3. Paste your Supabase + Meta env vars into hPanel.
 4. Push to `main`. Hostinger builds and serves it. Done.
 
-Full walkthrough with screenshots:
-**[wacrm.tech/docs/deployment-hostinger](https://wacrm.tech/docs/deployment-hostinger)**.
-
-> _Note: wacrm is MIT-licensed and runs anywhere Node.js does
+> _Note: NamiwhatsCRM is MIT-licensed and runs anywhere Node.js does
 > (Vercel, Railway, your own VPS). Hostinger is recommended, not
 > required._
 
 ## Documentation
 
 Full self-host documentation — Supabase migrations, WhatsApp Business
-API config, and production deploy — lives at
-**[wacrm.tech/docs](https://wacrm.tech/docs)**
-(source: [ArnasDon/wacrm-site](https://github.com/ArnasDon/wacrm-site)).
+API config, and production deploy.
 
 Key pages:
-- [Getting started](https://wacrm.tech/docs/getting-started)
-- [Supabase setup](https://wacrm.tech/docs/supabase-setup)
-- [WhatsApp setup](https://wacrm.tech/docs/whatsapp-setup)
-- [Environment variables](https://wacrm.tech/docs/environment-variables)
-- [Deploy on Hostinger](https://wacrm.tech/docs/deployment-hostinger)
-- [Architecture](https://wacrm.tech/docs/architecture)
-- [Troubleshooting](https://wacrm.tech/docs/troubleshooting)
+- Getting started
+- Supabase setup
+- WhatsApp setup
+- Environment variables
+- Deploy on Hostinger
+- Architecture
+- Troubleshooting
 
 ## Stack
 
@@ -160,10 +147,7 @@ Key pages:
 
 ## Contributing
 
-This is a template, not a collaborative product — the expected flow is
-fork → customise → deploy, **not** upstream contribution. Bug reports
-and security issues are welcome; feature PRs often belong in your fork
-rather than here. Details in
+Bug reports and security issues are welcome! Details in
 [`CONTRIBUTING.md`](./CONTRIBUTING.md) and
 [`.github/SECURITY.md`](./.github/SECURITY.md).
 
