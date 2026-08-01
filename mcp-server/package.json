@@ -1,14 +1,14 @@
 {
-  "name": "wacrm-mcp",
-  "version": "0.1.1",
-  "mcpName": "io.github.ArnasDon/wacrm-mcp",
-  "description": "Model Context Protocol (MCP) server for wacrm — drive your self-hosted WhatsApp CRM from Claude, Cursor, and other MCP clients.",
+  "name": "namiwhatsapp-mcp",
+  "version": "0.1.0",
+  "mcpName": "io.github.prasannab4362/namiwhatsapp-mcp",
+  "description": "Model Context Protocol (MCP) server for NamiwhatsCRM — drive your self-hosted WhatsApp CRM from Claude, Cursor, and other MCP clients.",
   "license": "MIT",
-  "author": "Arnas Donauskas",
-  "homepage": "https://github.com/ArnasDon/wacrm",
+  "author": "Prasanna B",
+  "homepage": "https://github.com/prasannab4362/namiwhatsapp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArnasDon/wacrm.git",
+    "url": "git+https://github.com/prasannab4362/namiwhatsapp.git",
     "directory": "mcp-server"
   },
   "keywords": [
